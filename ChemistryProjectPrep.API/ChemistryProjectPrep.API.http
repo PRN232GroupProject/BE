@@ -1,0 +1,6 @@
+@ChemistryProjectPrep.API_HostAddress = http://localhost:5208
+
+GET {{ChemistryProjectPrep.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
