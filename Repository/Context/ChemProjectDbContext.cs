@@ -1,11 +1,11 @@
-﻿using Repository.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Repository.Data.Entities;
 
 namespace Repository.Context
 {
