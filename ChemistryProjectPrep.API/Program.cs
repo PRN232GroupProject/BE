@@ -1,3 +1,6 @@
+using BusinessObjects.DAO.Implements;
+using BusinessObjects.DAO.Interfaces;
+using BusinessObjects.Mapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -18,7 +21,10 @@ builder.Services.AddDbContext<ChemProjectDbContext>(options =>
 
 
 // Add services to the container.
-builder.Services.AddScoped<IUnitOfWork<ChemProjectDbContext>, UnitOfWork<ChemProjectDbContext>>();
+builder.Services.AddScoped(typeof(IMapperlyMapper), typeof(MapperlyMapper));
+builder.Services.AddScoped(typeof(IGenericDAO<>), typeof(GenericDAO<>));
+builder.Services.AddScoped<IUserDAO, UserDAO>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddCors(options =>
 {
