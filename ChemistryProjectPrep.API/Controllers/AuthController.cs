@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Repository.Data.Requests;
 using Service.Interfaces;
 using System.Security.Claims;
+using BusinessObjects.Metadata;
+using BusinessObjects.DTO;
+using ChemistryProjectPrep.API.Constants;
 
 namespace ChemistryProjectPrep.API.Controllers
 {
-    [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -18,32 +19,32 @@ namespace ChemistryProjectPrep.API.Controllers
             _authService = authService;
         }
 
-        [HttpPost("login")]
+        [HttpPost(ApiEndpointConstants.Auth.LoginEndpoint)]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             var result = await _authService.LoginAsync(request);
-            if (!result.Success)
-                return Unauthorized(result);
-            return Ok(result);
+
+            var response = ApiResponseBuilder.BuildResponse(
+                statusCode: result.StatusCode,
+                message: result.Message,
+                data: result.Data
+            );
+
+            return StatusCode(result.StatusCode, response);
         }
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(string fullName, string email, string password, int roleId)
+
+        [HttpPost(ApiEndpointConstants.Auth.RegisterEndpoint)]
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-            var result = await _authService.RegisterAsync(fullName, email, password, roleId);
-            if (!result.Success)
-                return BadRequest(result);
-            return Ok(result);
-        }
-        [Authorize]
-        [HttpGet("me")]
-        public IActionResult Me()
-        {
-            return Ok(new
-            {
-                UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
-                Email = User.FindFirst(ClaimTypes.Email)?.Value,
-                Role = User.FindFirst(ClaimTypes.Role)?.Value
-            });
+            var result = await _authService.RegisterAsync(request);
+
+            var response = ApiResponseBuilder.BuildResponse(
+                statusCode: result.StatusCode,
+                message: result.Message,
+                data: result.Data
+            );
+
+            return StatusCode(result.StatusCode, response);
         }
     }
 }

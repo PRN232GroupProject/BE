@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BusinessObjects.DTO;
+using BusinessObjects.Entities;
+using BusinessObjects.Mapper;
+using BusinessObjects.Metadata;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Repository.Context;
-using Repository.Data.Entities;
-using Repository.Data.Requests;
-using Repository.Data.Responses;
 using Repository.Repositories.Interfaces;
 using Service.Helper;
 using Service.Interfaces;
@@ -22,43 +23,57 @@ namespace Service.Implements
     {
         private readonly IUnitOfWork<ChemProjectDbContext> _unitOfWork;
         private readonly IConfiguration _config;
+        private readonly IMapperlyMapper _mapper;
 
-        public AuthService(IUnitOfWork<ChemProjectDbContext> unitOfWork, IConfiguration config)
+        public AuthService(IUnitOfWork<ChemProjectDbContext> unitOfWork, IConfiguration config, IMapperlyMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _config = config;
+            _mapper = mapper;
         }
 
-        public async Task<ApiResponse<LoginResponse>> LoginAsync(LoginRequest request)
+        public async Task<ServiceResult<LoginResponse>> LoginAsync(LoginRequest request)
         {
             var userRepo = _unitOfWork.GetRepository<User>();
 
             var user = await userRepo.FirstOrDefaultAsync(
-                predicate: u => u.Email == request.Username,
+                predicate: u => u.Email == request.Email,
                 include: q => q.Include(u => u.Role)
             );
 
             if (user == null || !PasswordHelper.VerifyPassword(request.Password, user.PasswordHash))
-                return ApiResponse<LoginResponse>.Fail("Invalid username or password.");
-
-            // Sinh JWT
-            var token = GenerateJwtToken(user);
-
-            var response = new LoginResponse
             {
-                Token = token,
-                Role = user.Role.Name
-            };
+                return ServiceResult<LoginResponse>.Failure(
+                    message: "Invalid username or password.",
+                    statusCode: 401
+                );
+            }
 
-            return ApiResponse<LoginResponse>.Ok(response, "Login successful");
+            // Map user to LoginResponse (only maps Role)
+            var response = _mapper.UserToLoginResponse(user);
+
+            // Generate JWT token
+            response.Token = GenerateJwtToken(user);
+
+            return ServiceResult<LoginResponse>.Success(
+                data: response,
+                message: "Login successful",
+                statusCode: 200
+            );
         }
-        public async Task<ApiResponse<string>> RegisterAsync(string fullName, string email, string password, int roleId)
+
+        public async Task<ServiceResult<string>> RegisterAsync(string fullName, string email, string password, int roleId)
         {
             var userRepo = _unitOfWork.GetRepository<User>();
 
             var existing = await userRepo.FirstOrDefaultAsync(predicate: u => u.Email == email);
             if (existing != null)
-                return ApiResponse<string>.Fail("Email already exists");
+            {
+                return ServiceResult<string>.Failure(
+                    message: "Email already exists",
+                    statusCode: 400
+                );
+            }
 
             var newUser = new User
             {
@@ -72,7 +87,38 @@ namespace Service.Implements
             await userRepo.InsertAsync(newUser);
             await _unitOfWork.SaveChangesAsync();
 
-            return ApiResponse<string>.Ok("User registered successfully");
+            return ServiceResult<string>.Success(
+                data: "Registration completed",
+                message: "User registered successfully",
+                statusCode: 201
+            );
+        }
+
+        public async Task<ServiceResult<string>> RegisterAsync(RegisterRequest request)
+        {
+            var userRepo = _unitOfWork.GetRepository<User>();
+
+            var existing = await userRepo.FirstOrDefaultAsync(predicate: u => u.Email == request.Email);
+            if (existing != null)
+            {
+                return ServiceResult<string>.Failure(
+                    message: "Email already exists",
+                    statusCode: 400
+                );
+            }
+
+            var newUser = _mapper.RegisterRequestToUser(request);
+            newUser.PasswordHash = PasswordHelper.HashPassword(request.Password);
+            newUser.CreatedAt = DateTime.UtcNow;
+
+            await userRepo.InsertAsync(newUser);
+            await _unitOfWork.SaveChangesAsync();
+
+            return ServiceResult<string>.Success(
+                data: "Registration completed",
+                message: "User registered successfully",
+                statusCode: 201
+            );
         }
 
         private string GenerateJwtToken(User user)

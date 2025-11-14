@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository.Data.Entities
+namespace BusinessObjects.Entities
 {
     public class Resource
     {
