@@ -5,7 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Repository.Data.Entities;
+using BusinessObjects.Entities;
 
 namespace Repository.Context
 {
