@@ -105,6 +105,7 @@ namespace Service.Implements
                 var newUser = _mapper.RegisterRequestToUser(request);
                 newUser.IsActive = true;
                 newUser.RoleId = 1; // Default for new users
+                newUser.CreatedAt = DateTime.Now;
                 return await _userRepository.CreateUserAsync(newUser);
             }
             catch (Exception ex)
