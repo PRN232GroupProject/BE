@@ -1,5 +1,4 @@
 ﻿using BusinessObjects.DAO.Base.Implements;
-using BusinessObjects.DAO.Base.Interfaces;
 using BusinessObjects.DAO.Implements;
 using BusinessObjects.DAO.Interfaces;
 using BusinessObjects.Mapper;
@@ -14,11 +13,13 @@ namespace ChemistryProjectPrep.API.Configurations
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
+            services.AddScoped<TokenProvider>();
+
             // Mapper
             services.AddScoped<IMapperlyMapper, MapperlyMapper>();
 
             // DAOs
-            services.AddScoped(typeof(IGenericDAO<>), typeof(GenericDAO<>));
             services.AddScoped<IUserDAO, UserDAO>();
 
             // Repositories
@@ -26,6 +27,7 @@ namespace ChemistryProjectPrep.API.Configurations
 
             // Services
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IUserService, UserService>();
 
             return services;
         }

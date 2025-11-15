@@ -56,17 +56,22 @@ namespace ChemistryProjectPrep.API.Controllers
         {
             try
             {
-                throw new NotImplementedException();
-            }
-            catch (NotImplementedException)
-            {
-                var errorResponse = ApiResponseBuilder.BuildResponse<object>(
-                    statusCode: StatusCodes.Status501NotImplemented,
-                    message: "Register endpoint is not yet implemented",
-                    data: null
-                );
+                var response = await _authService.RegisterAsync(request);
 
-                return StatusCode(StatusCodes.Status501NotImplemented, errorResponse);
+                if (response == null)
+                {
+                    return BadRequest(ApiResponseBuilder.BuildResponse<object>(
+                        StatusCodes.Status400BadRequest,
+                        "Registration failed. Email may already be in use.",
+                        null
+                    ));
+                }
+
+                return Ok(ApiResponseBuilder.BuildResponse(
+                    StatusCodes.Status200OK,
+                    "Registration successful.",
+                    response
+                ));
             }
             catch (Exception ex)
             {

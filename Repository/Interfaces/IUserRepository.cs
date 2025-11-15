@@ -11,8 +11,10 @@ namespace Repository.Interfaces
     {
         /// Get user by email with role information
         Task<User> GetUserByEmailWithRoleAsync(string email);
-
-        /// Check if email already exists
+        Task<User?> GetUserByIdAsync(int userId);
         Task<bool> EmailExistsAsync(string email);
+        Task<bool> UpdateUserAsync(User user);
+        Task<bool> CreateUserAsync(User user);
+        Task<bool> DeleteUserAsync(int userId);
     }
 }

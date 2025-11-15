@@ -11,6 +11,10 @@ namespace BusinessObjects.Context
 {
     public class ChemProjectDbContext : DbContext
     {
+        public ChemProjectDbContext()
+        {
+        }
+
         public ChemProjectDbContext(DbContextOptions<ChemProjectDbContext> options) : base(options) { }
 
         public DbSet<Role> Roles { get; set; }
@@ -23,6 +27,7 @@ namespace BusinessObjects.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasDefaultSchema("ChemistryPrepV1");
             base.OnModelCreating(modelBuilder);
 
             // Relationships

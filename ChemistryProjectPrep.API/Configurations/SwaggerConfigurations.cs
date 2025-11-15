@@ -1,4 +1,5 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
 
 namespace ChemistryProjectPrep.API.Configurations
 {
@@ -12,28 +13,26 @@ namespace ChemistryProjectPrep.API.Configurations
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Auth API", Version = "v1" });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = "JWT Authorization header. Example: 'Bearer {token}'",
+                    Description = "JWT Authorization header using the Bearer scheme. Enter your token here.",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer"
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT"
                 });
 
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement {
                     {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
+                        new OpenApiSecurityScheme {
+                            Reference = new OpenApiReference {
                                 Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
+                                Id = JwtBearerDefaults.AuthenticationScheme
                             }
                         },
-                        Array.Empty<string>()
+                        new List<string>()
                     }
                 });
-            });
+             });
 
             return services;
         }

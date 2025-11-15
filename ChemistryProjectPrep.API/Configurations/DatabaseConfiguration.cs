@@ -13,7 +13,7 @@ public static class DatabaseConfiguration
             throw new ArgumentException("Connection string 'DefaultConnection' is not configured.");
         }
         services.AddDbContext<ChemProjectDbContext>(options =>
-            options.UseSqlServer(connectionString));
+            options.UseNpgsql(connectionString)); // Changed from UseSqlServer to UseNpgsql
         return services;
     }
 }

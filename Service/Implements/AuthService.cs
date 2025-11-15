@@ -1,40 +1,38 @@
 ﻿using BusinessObjects.DTO;
 using BusinessObjects.Entities;
 using BusinessObjects.Mapper;
-using BusinessObjects.Metadata;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Repository.Interfaces;
-using Service.Helper;
 using Service.Interfaces;
-using System;
-using System.Collections.Generic;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.Implements
 {
     public class AuthService : IAuthService
     {
-  
+
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _config;
         private readonly IMapperlyMapper _mapper;
+        private readonly TokenProvider _tokenProvider;
 
         public AuthService(
-            
+
             IUserRepository userRepository,
             IConfiguration config,
-            IMapperlyMapper mapper)
+            IMapperlyMapper mapper,
+            TokenProvider tokenProvider)
         {
-            
+
             _userRepository = userRepository;
             _config = config;
             _mapper = mapper;
+            _tokenProvider = tokenProvider;
         }
 
         public async Task<LoginResponse> LoginAsync(LoginRequest request)
@@ -42,48 +40,107 @@ namespace Service.Implements
             // Query logic được đóng gói trong repository
             var user = await _userRepository.GetUserByEmailWithRoleAsync(request.Email);
 
-            if (user == null || !PasswordHelper.VerifyPassword(request.Password, user.PasswordHash))
+            bool isPasswordValid = VerifyPassword(request.Password, user?.PasswordHash ?? "");
+
+            if (!isPasswordValid)
             {
-                return null;
+                Console.WriteLine("Password verification failed");
+                return new LoginResponse { };
+            }
+
+            if (!IsBCryptHash(user.PasswordHash))
+            {
+                try
+                {
+                    await UpdatePasswordAsync(user.Id, request.Password);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error updating password hash: {ex.Message}");
+                }
             }
 
             // Map user to LoginResponse
             var response = _mapper.UserToLoginResponse(user);
 
-            // Generate JWT token
-            response.Token = GenerateJwtToken(user);
+            var token = _tokenProvider.GenerateToken(
+                user.Id.ToString(),
+                user.Email ?? string.Empty,
+                new List<string> { user.Role.Name }
+            );
+
+            response.Token = token;
 
             return response;
         }
 
-        public async Task<UserDTO> RegisterAsync(RegisterRequest request)
+        public async Task<bool> UpdatePasswordAsync(int userId, string newPassword)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var existingUser = await _userRepository.GetUserByIdAsync(userId);
+                if (existingUser == null)
+                {
+                    throw new Exception("User not found.");
+                }
+
+                existingUser.PasswordHash = HashPassword(newPassword);
+                return await _userRepository.UpdateUserAsync(existingUser);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
-        #region JWT Methods
-
-        private string GenerateJwtToken(User user)
+        public async Task<bool> RegisterAsync(RegisterRequest request)
         {
-            var claims = new[]
+            try
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role.Name)
-            };
+                var existingUser = await _userRepository.GetUserByEmailWithRoleAsync(request.Email);
+                if (existingUser != null)
+                {
+                    throw new Exception("Email already in use.");
+                }
+                var newUser = _mapper.RegisterRequestToUser(request);
+                newUser.IsActive = true;
+                newUser.RoleId = 1; // Default for new users
+                return await _userRepository.CreateUserAsync(newUser);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        #region Helper Methods
 
-            var token = new JwtSecurityToken(
-                issuer: _config["Jwt:Issuer"],
-                audience: _config["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.UtcNow.AddHours(6),
-                signingCredentials: creds
-            );
+        private static string HashPassword(string password)
+        {
+            return BCrypt.Net.BCrypt.HashPassword(password, workFactor: 12);
+        }
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+        private static bool VerifyPassword(string password, string hashedPassword)
+        {
+            try
+            {
+                return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private static bool IsBCryptHash(string password)
+        {
+            // BCrypt hashes start with $2a$, $2b$, $2y$, or $2x$ followed by cost
+            return password != null &&
+                   password.Length >= 60 &&
+                   (password.StartsWith("$2a$") ||
+                    password.StartsWith("$2b$") ||
+                    password.StartsWith("$2y$") ||
+                    password.StartsWith("$2x$"));
         }
 
         #endregion

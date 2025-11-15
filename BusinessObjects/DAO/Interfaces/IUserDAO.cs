@@ -8,9 +8,13 @@ using System.Threading.Tasks;
 
 namespace BusinessObjects.DAO.Interfaces
 {
-    public interface IUserDAO : IGenericDAO<User>
+    public interface IUserDAO : IGenericRepository<User>
     {
+        Task<User?> GetUserByIdAsync(int userId);
         Task<User?> GetUserByEmailAsync(string email);
         Task<bool> EmailExistsAsync(string email);
+        Task<bool> UpdateUserAsync(User user);
+        Task<bool> CreateUserAsync(User user);
+        Task<bool> DeleteUserAsync(int userId);
     }
 }
