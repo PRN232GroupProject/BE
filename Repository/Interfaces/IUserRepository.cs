@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository.Repositories.Interfaces
+namespace Repository.Interfaces
 {
     public interface IUserRepository 
     {
@@ -14,8 +14,5 @@ namespace Repository.Repositories.Interfaces
 
         /// Check if email already exists
         Task<bool> EmailExistsAsync(string email);
-
-        /// Get user for authentication (includes role)
-        Task<User> GetUserForAuthenticationAsync(string email);
     }
 }

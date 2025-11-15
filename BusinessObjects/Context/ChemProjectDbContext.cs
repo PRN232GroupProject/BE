@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BusinessObjects.Entities;
 
-namespace Repository.Context
+namespace BusinessObjects.Context
 {
     public class ChemProjectDbContext : DbContext
     {

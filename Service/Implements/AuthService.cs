@@ -5,8 +5,7 @@ using BusinessObjects.Metadata;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Repository.Context;
-using Repository.Repositories.Interfaces;
+using Repository.Interfaces;
 using Service.Helper;
 using Service.Interfaces;
 using System;
@@ -38,17 +37,14 @@ namespace Service.Implements
             _mapper = mapper;
         }
 
-        public async Task<ServiceResult<LoginResponse>> LoginAsync(LoginRequest request)
+        public async Task<LoginResponse> LoginAsync(LoginRequest request)
         {
             // Query logic được đóng gói trong repository
-            var user = await _userRepository.GetUserForAuthenticationAsync(request.Email);
+            var user = await _userRepository.GetUserByEmailWithRoleAsync(request.Email);
 
             if (user == null || !PasswordHelper.VerifyPassword(request.Password, user.PasswordHash))
             {
-                return ServiceResult<LoginResponse>.Failure(
-                    message: "Invalid username or password.",
-                    statusCode: 401
-                );
+                return null;
             }
 
             // Map user to LoginResponse
@@ -57,67 +53,15 @@ namespace Service.Implements
             // Generate JWT token
             response.Token = GenerateJwtToken(user);
 
-            return ServiceResult<LoginResponse>.Success(
-                data: response,
-                message: "Login successful",
-                statusCode: 200
-            );
+            return response;
         }
 
-        //public async Task<ServiceResult<string>> RegisterAsync(string fullName, string email, string password, int roleId)
-        //{
-        //    // Query logic được đóng gói trong repository
-        //    if (await _userRepository.EmailExistsAsync(email))
-        //    {
-        //        return ServiceResult<string>.Failure(
-        //            message: "Email already exists",
-        //            statusCode: 400
-        //        );
-        //    }
+        public async Task<UserDTO> RegisterAsync(RegisterRequest request)
+        {
+            throw new NotImplementedException();
+        }
 
-        //    var newUser = new User
-        //    {
-        //        FullName = fullName,
-        //        Email = email,
-        //        PasswordHash = PasswordHelper.HashPassword(password),
-        //        RoleId = roleId,
-        //        CreatedAt = DateTime.UtcNow
-        //    };
-
-        //    await _userRepository.InsertAsync(newUser);
-        //    await _unitOfWork.SaveChangesAsync();
-
-        //    return ServiceResult<string>.Success(
-        //        data: "Registration completed",
-        //        message: "User registered successfully",
-        //        statusCode: 201
-        //    );
-        //}
-
-        //public async Task<ServiceResult<string>> RegisterAsync(RegisterRequest request)
-        //{
-        //    // Query logic được đóng gói trong repository
-        //    if (await _userRepository.EmailExistsAsync(request.Email))
-        //    {
-        //        return ServiceResult<string>.Failure(
-        //            message: "Email already exists",
-        //            statusCode: 400
-        //        );
-        //    }
-
-        //    var newUser = _mapper.RegisterRequestToUser(request);
-        //    newUser.PasswordHash = PasswordHelper.HashPassword(request.Password);
-        //    newUser.CreatedAt = DateTime.UtcNow;
-
-        //    await _userRepository.InsertAsync(newUser);
-        //    await _unitOfWork.SaveChangesAsync();
-
-        //    return ServiceResult<string>.Success(
-        //        data: "Registration completed",
-        //        message: "User registered successfully",
-        //        statusCode: 201
-        //    );
-        //}
+        #region JWT Methods
 
         private string GenerateJwtToken(User user)
         {
@@ -141,5 +85,7 @@ namespace Service.Implements
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        #endregion
     }
 }

@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BusinessObjects.Context;
+using BusinessObjects.DAO.Base.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using Repository.Context;
-using Repository.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,15 +10,15 @@ using System.Text;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace Repository.Repositories.Implements
+namespace BusinessObjects.DAO.Base.Implements
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericDAO<T> : IGenericDAO<T> where T : class
     {
         protected readonly ChemProjectDbContext _dbContext;
         protected readonly DbSet<T> _dbSet;
 
 
-        public GenericRepository(ChemProjectDbContext context)
+        public GenericDAO(ChemProjectDbContext context)
         {
             _dbContext = context;
             _dbSet = context.Set<T>();

@@ -1,4 +1,5 @@
-﻿using BusinessObjects.Entities;
+﻿using BusinessObjects.DAO.Base.Interfaces;
+using BusinessObjects.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

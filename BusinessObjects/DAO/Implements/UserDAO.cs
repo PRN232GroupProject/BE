@@ -1,7 +1,8 @@
-﻿using BusinessObjects.DAO.Interfaces;
+﻿using BusinessObjects.Context;
+using BusinessObjects.DAO.Base.Implements;
+using BusinessObjects.DAO.Interfaces;
 using BusinessObjects.Entities;
 using Microsoft.EntityFrameworkCore;
-using Repository.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +19,11 @@ namespace BusinessObjects.DAO.Implements
 
         public async Task<User?> GetUserByEmailAsync(string email)
         {
-            return await _dbSet.FirstOrDefaultAsync(u => u.Email == email);
+            return await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
         public async Task<bool> EmailExistsAsync(string email)
         {
-            return await _dbSet.AnyAsync(u => u.Email == email);
+            return await _dbContext.Users.AnyAsync(u => u.Email == email);
         }
       
     }
