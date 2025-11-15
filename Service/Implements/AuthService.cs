@@ -21,25 +21,27 @@ namespace Service.Implements
 {
     public class AuthService : IAuthService
     {
-        private readonly IUnitOfWork<ChemProjectDbContext> _unitOfWork;
+  
+        private readonly IUserRepository _userRepository;
         private readonly IConfiguration _config;
         private readonly IMapperlyMapper _mapper;
 
-        public AuthService(IUnitOfWork<ChemProjectDbContext> unitOfWork, IConfiguration config, IMapperlyMapper mapper)
+        public AuthService(
+            
+            IUserRepository userRepository,
+            IConfiguration config,
+            IMapperlyMapper mapper)
         {
-            _unitOfWork = unitOfWork;
+            
+            _userRepository = userRepository;
             _config = config;
             _mapper = mapper;
         }
 
         public async Task<ServiceResult<LoginResponse>> LoginAsync(LoginRequest request)
         {
-            var userRepo = _unitOfWork.GetRepository<User>();
-
-            var user = await userRepo.FirstOrDefaultAsync(
-                predicate: u => u.Email == request.Email,
-                include: q => q.Include(u => u.Role)
-            );
+            // Query logic được đóng gói trong repository
+            var user = await _userRepository.GetUserForAuthenticationAsync(request.Email);
 
             if (user == null || !PasswordHelper.VerifyPassword(request.Password, user.PasswordHash))
             {
@@ -49,7 +51,7 @@ namespace Service.Implements
                 );
             }
 
-            // Map user to LoginResponse (only maps Role)
+            // Map user to LoginResponse
             var response = _mapper.UserToLoginResponse(user);
 
             // Generate JWT token
@@ -62,64 +64,60 @@ namespace Service.Implements
             );
         }
 
-        public async Task<ServiceResult<string>> RegisterAsync(string fullName, string email, string password, int roleId)
-        {
-            var userRepo = _unitOfWork.GetRepository<User>();
+        //public async Task<ServiceResult<string>> RegisterAsync(string fullName, string email, string password, int roleId)
+        //{
+        //    // Query logic được đóng gói trong repository
+        //    if (await _userRepository.EmailExistsAsync(email))
+        //    {
+        //        return ServiceResult<string>.Failure(
+        //            message: "Email already exists",
+        //            statusCode: 400
+        //        );
+        //    }
 
-            var existing = await userRepo.FirstOrDefaultAsync(predicate: u => u.Email == email);
-            if (existing != null)
-            {
-                return ServiceResult<string>.Failure(
-                    message: "Email already exists",
-                    statusCode: 400
-                );
-            }
+        //    var newUser = new User
+        //    {
+        //        FullName = fullName,
+        //        Email = email,
+        //        PasswordHash = PasswordHelper.HashPassword(password),
+        //        RoleId = roleId,
+        //        CreatedAt = DateTime.UtcNow
+        //    };
 
-            var newUser = new User
-            {
-                FullName = fullName,
-                Email = email,
-                PasswordHash = PasswordHelper.HashPassword(password),
-                RoleId = roleId,
-                CreatedAt = DateTime.UtcNow
-            };
+        //    await _userRepository.InsertAsync(newUser);
+        //    await _unitOfWork.SaveChangesAsync();
 
-            await userRepo.InsertAsync(newUser);
-            await _unitOfWork.SaveChangesAsync();
+        //    return ServiceResult<string>.Success(
+        //        data: "Registration completed",
+        //        message: "User registered successfully",
+        //        statusCode: 201
+        //    );
+        //}
 
-            return ServiceResult<string>.Success(
-                data: "Registration completed",
-                message: "User registered successfully",
-                statusCode: 201
-            );
-        }
+        //public async Task<ServiceResult<string>> RegisterAsync(RegisterRequest request)
+        //{
+        //    // Query logic được đóng gói trong repository
+        //    if (await _userRepository.EmailExistsAsync(request.Email))
+        //    {
+        //        return ServiceResult<string>.Failure(
+        //            message: "Email already exists",
+        //            statusCode: 400
+        //        );
+        //    }
 
-        public async Task<ServiceResult<string>> RegisterAsync(RegisterRequest request)
-        {
-            var userRepo = _unitOfWork.GetRepository<User>();
+        //    var newUser = _mapper.RegisterRequestToUser(request);
+        //    newUser.PasswordHash = PasswordHelper.HashPassword(request.Password);
+        //    newUser.CreatedAt = DateTime.UtcNow;
 
-            var existing = await userRepo.FirstOrDefaultAsync(predicate: u => u.Email == request.Email);
-            if (existing != null)
-            {
-                return ServiceResult<string>.Failure(
-                    message: "Email already exists",
-                    statusCode: 400
-                );
-            }
+        //    await _userRepository.InsertAsync(newUser);
+        //    await _unitOfWork.SaveChangesAsync();
 
-            var newUser = _mapper.RegisterRequestToUser(request);
-            newUser.PasswordHash = PasswordHelper.HashPassword(request.Password);
-            newUser.CreatedAt = DateTime.UtcNow;
-
-            await userRepo.InsertAsync(newUser);
-            await _unitOfWork.SaveChangesAsync();
-
-            return ServiceResult<string>.Success(
-                data: "Registration completed",
-                message: "User registered successfully",
-                statusCode: 201
-            );
-        }
+        //    return ServiceResult<string>.Success(
+        //        data: "Registration completed",
+        //        message: "User registered successfully",
+        //        statusCode: 201
+        //    );
+        //}
 
         private string GenerateJwtToken(User user)
         {

@@ -33,18 +33,18 @@ namespace ChemistryProjectPrep.API.Controllers
             return StatusCode(result.StatusCode, response);
         }
 
-        [HttpPost(ApiEndpointConstants.Auth.RegisterEndpoint)]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
-        {
-            var result = await _authService.RegisterAsync(request);
+        //[HttpPost(ApiEndpointConstants.Auth.RegisterEndpoint)]
+        //public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+        //{
+        //    var result = await _authService.RegisterAsync(request);
 
-            var response = ApiResponseBuilder.BuildResponse(
-                statusCode: result.StatusCode,
-                message: result.Message,
-                data: result.Data
-            );
+        //    var response = ApiResponseBuilder.BuildResponse(
+        //        statusCode: result.StatusCode,
+        //        message: result.Message,
+        //        data: result.Data
+        //    );
 
-            return StatusCode(result.StatusCode, response);
-        }
+        //    return StatusCode(result.StatusCode, response);
+        //}
     }
 }
