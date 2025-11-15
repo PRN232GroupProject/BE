@@ -22,29 +22,67 @@ namespace ChemistryProjectPrep.API.Controllers
         [HttpPost(ApiEndpointConstants.Auth.LoginEndpoint)]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            var result = await _authService.LoginAsync(request);
+            try
+            {
+                var response = await _authService.LoginAsync(request);
+                if (response == null)
+                {
+                    return Unauthorized(ApiResponseBuilder.BuildResponse<LoginResponse>(
+                        StatusCodes.Status401Unauthorized,
+                        "Invalid email or password.",
+                        null
+                    ));
+                }
 
-            var response = ApiResponseBuilder.BuildResponse(
-                statusCode: result.StatusCode,
-                message: result.Message,
-                data: result.Data
-            );
-
-            return StatusCode(result.StatusCode, response);
+                return Ok(ApiResponseBuilder.BuildResponse(
+                    StatusCodes.Status200OK,
+                    "Login successful.",
+                    response
+                ));
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    ApiResponseBuilder.BuildResponse<LoginResponse>(
+                        StatusCodes.Status500InternalServerError,
+                        "An unexpected error occurred while processing the request.",
+                        null
+                    ));
+            }
         }
 
         [HttpPost(ApiEndpointConstants.Auth.RegisterEndpoint)]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-            var result = await _authService.RegisterAsync(request);
+            try
+            {
+                var response = await _authService.RegisterAsync(request);
 
-            var response = ApiResponseBuilder.BuildResponse(
-                statusCode: result.StatusCode,
-                message: result.Message,
-                data: result.Data
-            );
+                if (response == null)
+                {
+                    return BadRequest(ApiResponseBuilder.BuildResponse<object>(
+                        StatusCodes.Status400BadRequest,
+                        "Registration failed. Email may already be in use.",
+                        null
+                    ));
+                }
 
-            return StatusCode(result.StatusCode, response);
+                return Ok(ApiResponseBuilder.BuildResponse(
+                    StatusCodes.Status200OK,
+                    "Registration successful.",
+                    response
+                ));
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = ApiResponseBuilder.BuildResponse<object>(
+                    statusCode: StatusCodes.Status500InternalServerError,
+                    message: $"An error occurred: {ex.Message}",
+                    data: null
+                );
+
+                return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
+            }
         }
     }
 }

@@ -5,12 +5,16 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Repository.Data.Entities;
+using BusinessObjects.Entities;
 
-namespace Repository.Context
+namespace BusinessObjects.Context
 {
     public class ChemProjectDbContext : DbContext
     {
+        public ChemProjectDbContext()
+        {
+        }
+
         public ChemProjectDbContext(DbContextOptions<ChemProjectDbContext> options) : base(options) { }
 
         public DbSet<Role> Roles { get; set; }
@@ -23,6 +27,7 @@ namespace Repository.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasDefaultSchema("ChemistryPrepV1");
             base.OnModelCreating(modelBuilder);
 
             // Relationships

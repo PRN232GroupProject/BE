@@ -1,147 +1,149 @@
 ﻿using BusinessObjects.DTO;
 using BusinessObjects.Entities;
 using BusinessObjects.Mapper;
-using BusinessObjects.Metadata;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Repository.Context;
-using Repository.Repositories.Interfaces;
-using Service.Helper;
+using Repository.Interfaces;
 using Service.Interfaces;
-using System;
-using System.Collections.Generic;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.Implements
 {
     public class AuthService : IAuthService
     {
-        private readonly IUnitOfWork<ChemProjectDbContext> _unitOfWork;
+
+        private readonly IUserRepository _userRepository;
         private readonly IConfiguration _config;
         private readonly IMapperlyMapper _mapper;
+        private readonly TokenProvider _tokenProvider;
 
-        public AuthService(IUnitOfWork<ChemProjectDbContext> unitOfWork, IConfiguration config, IMapperlyMapper mapper)
+        public AuthService(
+
+            IUserRepository userRepository,
+            IConfiguration config,
+            IMapperlyMapper mapper,
+            TokenProvider tokenProvider)
         {
-            _unitOfWork = unitOfWork;
+
+            _userRepository = userRepository;
             _config = config;
             _mapper = mapper;
+            _tokenProvider = tokenProvider;
         }
 
-        public async Task<ServiceResult<LoginResponse>> LoginAsync(LoginRequest request)
+        public async Task<LoginResponse> LoginAsync(LoginRequest request)
         {
-            var userRepo = _unitOfWork.GetRepository<User>();
+            // Query logic được đóng gói trong repository
+            var user = await _userRepository.GetUserByEmailWithRoleAsync(request.Email);
 
-            var user = await userRepo.FirstOrDefaultAsync(
-                predicate: u => u.Email == request.Email,
-                include: q => q.Include(u => u.Role)
-            );
+            bool isPasswordValid = VerifyPassword(request.Password, user?.PasswordHash ?? "");
 
-            if (user == null || !PasswordHelper.VerifyPassword(request.Password, user.PasswordHash))
+            if (!isPasswordValid)
             {
-                return ServiceResult<LoginResponse>.Failure(
-                    message: "Invalid username or password.",
-                    statusCode: 401
-                );
+                Console.WriteLine("Password verification failed");
+                return new LoginResponse { };
             }
 
-            // Map user to LoginResponse (only maps Role)
+            if (!IsBCryptHash(user.PasswordHash))
+            {
+                try
+                {
+                    await UpdatePasswordAsync(user.Id, request.Password);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error updating password hash: {ex.Message}");
+                }
+            }
+
+            // Map user to LoginResponse
             var response = _mapper.UserToLoginResponse(user);
 
-            // Generate JWT token
-            response.Token = GenerateJwtToken(user);
-
-            return ServiceResult<LoginResponse>.Success(
-                data: response,
-                message: "Login successful",
-                statusCode: 200
+            var token = _tokenProvider.GenerateToken(
+                user.Id.ToString(),
+                user.Email ?? string.Empty,
+                new List<string> { user.Role.Name }
             );
+
+            response.Token = token;
+
+            return response;
         }
 
-        public async Task<ServiceResult<string>> RegisterAsync(string fullName, string email, string password, int roleId)
+        public async Task<bool> UpdatePasswordAsync(int userId, string newPassword)
         {
-            var userRepo = _unitOfWork.GetRepository<User>();
-
-            var existing = await userRepo.FirstOrDefaultAsync(predicate: u => u.Email == email);
-            if (existing != null)
+            try
             {
-                return ServiceResult<string>.Failure(
-                    message: "Email already exists",
-                    statusCode: 400
-                );
+                var existingUser = await _userRepository.GetUserByIdAsync(userId);
+                if (existingUser == null)
+                {
+                    throw new Exception("User not found.");
+                }
+
+                existingUser.PasswordHash = HashPassword(newPassword);
+                return await _userRepository.UpdateUserAsync(existingUser);
             }
-
-            var newUser = new User
+            catch (Exception ex)
             {
-                FullName = fullName,
-                Email = email,
-                PasswordHash = PasswordHelper.HashPassword(password),
-                RoleId = roleId,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            await userRepo.InsertAsync(newUser);
-            await _unitOfWork.SaveChangesAsync();
-
-            return ServiceResult<string>.Success(
-                data: "Registration completed",
-                message: "User registered successfully",
-                statusCode: 201
-            );
-        }
-
-        public async Task<ServiceResult<string>> RegisterAsync(RegisterRequest request)
-        {
-            var userRepo = _unitOfWork.GetRepository<User>();
-
-            var existing = await userRepo.FirstOrDefaultAsync(predicate: u => u.Email == request.Email);
-            if (existing != null)
-            {
-                return ServiceResult<string>.Failure(
-                    message: "Email already exists",
-                    statusCode: 400
-                );
+                throw new Exception(ex.Message);
             }
-
-            var newUser = _mapper.RegisterRequestToUser(request);
-            newUser.PasswordHash = PasswordHelper.HashPassword(request.Password);
-            newUser.CreatedAt = DateTime.UtcNow;
-
-            await userRepo.InsertAsync(newUser);
-            await _unitOfWork.SaveChangesAsync();
-
-            return ServiceResult<string>.Success(
-                data: "Registration completed",
-                message: "User registered successfully",
-                statusCode: 201
-            );
         }
 
-        private string GenerateJwtToken(User user)
+        public async Task<bool> RegisterAsync(RegisterRequest request)
         {
-            var claims = new[]
+            try
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role.Name)
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: _config["Jwt:Issuer"],
-                audience: _config["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.UtcNow.AddHours(6),
-                signingCredentials: creds
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+                var existingUser = await _userRepository.GetUserByEmailWithRoleAsync(request.Email);
+                if (existingUser != null)
+                {
+                    throw new Exception("Email already in use.");
+                }
+                var newUser = _mapper.RegisterRequestToUser(request);
+                newUser.IsActive = true;
+                newUser.RoleId = 1; // Default for new users
+                newUser.CreatedAt = DateTime.Now;
+                return await _userRepository.CreateUserAsync(newUser);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
+
+        #region Helper Methods
+
+        private static string HashPassword(string password)
+        {
+            return BCrypt.Net.BCrypt.HashPassword(password, workFactor: 12);
+        }
+
+        private static bool VerifyPassword(string password, string hashedPassword)
+        {
+            try
+            {
+                return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private static bool IsBCryptHash(string password)
+        {
+            // BCrypt hashes start with $2a$, $2b$, $2y$, or $2x$ followed by cost
+            return password != null &&
+                   password.Length >= 60 &&
+                   (password.StartsWith("$2a$") ||
+                    password.StartsWith("$2b$") ||
+                    password.StartsWith("$2y$") ||
+                    password.StartsWith("$2x$"));
+        }
+
+        #endregion
     }
 }

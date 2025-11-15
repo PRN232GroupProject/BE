@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Repository.Migrations
+namespace BusinessObjects.Migrations
 {
     /// <inheritdoc />
     public partial class init : Migration
@@ -12,8 +12,12 @@ namespace Repository.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "ChemistryPrepV1");
+
             migrationBuilder.CreateTable(
                 name: "Chapters",
+                schema: "ChemistryPrepV1",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -29,6 +33,7 @@ namespace Repository.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Roles",
+                schema: "ChemistryPrepV1",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -43,6 +48,7 @@ namespace Repository.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Users",
+                schema: "ChemistryPrepV1",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -59,6 +65,7 @@ namespace Repository.Migrations
                     table.ForeignKey(
                         name: "FK_Users_Roles_RoleId",
                         column: x => x.RoleId,
+                        principalSchema: "ChemistryPrepV1",
                         principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -66,6 +73,7 @@ namespace Repository.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Lessons",
+                schema: "ChemistryPrepV1",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -83,18 +91,21 @@ namespace Repository.Migrations
                     table.ForeignKey(
                         name: "FK_Lessons_Chapters_ChapterId",
                         column: x => x.ChapterId,
+                        principalSchema: "ChemistryPrepV1",
                         principalTable: "Chapters",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Lessons_Users_CreatedById",
                         column: x => x.CreatedById,
+                        principalSchema: "ChemistryPrepV1",
                         principalTable: "Users",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
                 name: "Questions",
+                schema: "ChemistryPrepV1",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -116,18 +127,21 @@ namespace Repository.Migrations
                     table.ForeignKey(
                         name: "FK_Questions_Chapters_ChapterId",
                         column: x => x.ChapterId,
+                        principalSchema: "ChemistryPrepV1",
                         principalTable: "Chapters",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Questions_Lessons_LessonId",
                         column: x => x.LessonId,
+                        principalSchema: "ChemistryPrepV1",
                         principalTable: "Lessons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Questions_Users_CreatedById",
                         column: x => x.CreatedById,
+                        principalSchema: "ChemistryPrepV1",
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -135,6 +149,7 @@ namespace Repository.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Resources",
+                schema: "ChemistryPrepV1",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -151,6 +166,7 @@ namespace Repository.Migrations
                     table.ForeignKey(
                         name: "FK_Resources_Lessons_LessonId",
                         column: x => x.LessonId,
+                        principalSchema: "ChemistryPrepV1",
                         principalTable: "Lessons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -158,6 +174,7 @@ namespace Repository.Migrations
 
             migrationBuilder.CreateTable(
                 name: "StudentAnswers",
+                schema: "ChemistryPrepV1",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -174,12 +191,14 @@ namespace Repository.Migrations
                     table.ForeignKey(
                         name: "FK_StudentAnswers_Questions_QuestionId",
                         column: x => x.QuestionId,
+                        principalSchema: "ChemistryPrepV1",
                         principalTable: "Questions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_StudentAnswers_Users_UserId",
                         column: x => x.UserId,
+                        principalSchema: "ChemistryPrepV1",
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -187,46 +206,55 @@ namespace Repository.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Lessons_ChapterId",
+                schema: "ChemistryPrepV1",
                 table: "Lessons",
                 column: "ChapterId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Lessons_CreatedById",
+                schema: "ChemistryPrepV1",
                 table: "Lessons",
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Questions_ChapterId",
+                schema: "ChemistryPrepV1",
                 table: "Questions",
                 column: "ChapterId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Questions_CreatedById",
+                schema: "ChemistryPrepV1",
                 table: "Questions",
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Questions_LessonId",
+                schema: "ChemistryPrepV1",
                 table: "Questions",
                 column: "LessonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Resources_LessonId",
+                schema: "ChemistryPrepV1",
                 table: "Resources",
                 column: "LessonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StudentAnswers_QuestionId",
+                schema: "ChemistryPrepV1",
                 table: "StudentAnswers",
                 column: "QuestionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StudentAnswers_UserId",
+                schema: "ChemistryPrepV1",
                 table: "StudentAnswers",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_RoleId",
+                schema: "ChemistryPrepV1",
                 table: "Users",
                 column: "RoleId");
         }
@@ -235,25 +263,32 @@ namespace Repository.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Resources");
+                name: "Resources",
+                schema: "ChemistryPrepV1");
 
             migrationBuilder.DropTable(
-                name: "StudentAnswers");
+                name: "StudentAnswers",
+                schema: "ChemistryPrepV1");
 
             migrationBuilder.DropTable(
-                name: "Questions");
+                name: "Questions",
+                schema: "ChemistryPrepV1");
 
             migrationBuilder.DropTable(
-                name: "Lessons");
+                name: "Lessons",
+                schema: "ChemistryPrepV1");
 
             migrationBuilder.DropTable(
-                name: "Chapters");
+                name: "Chapters",
+                schema: "ChemistryPrepV1");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Users",
+                schema: "ChemistryPrepV1");
 
             migrationBuilder.DropTable(
-                name: "Roles");
+                name: "Roles",
+                schema: "ChemistryPrepV1");
         }
     }
 }
