@@ -73,7 +73,60 @@ namespace Service.Implements
 
             return response;
         }
+        public async Task<UserDTO> RegisterAsync(RegisterRequest request)
+        {
+            try
+            {
+                // Validate input
+                if (string.IsNullOrWhiteSpace(request.Email) ||
+                    string.IsNullOrWhiteSpace(request.Password) ||
+                    string.IsNullOrWhiteSpace(request.FullName))
+                {
+                    throw new Exception("All fields are required.");
+                }
 
+                // Check if email already exists using the existing method
+                var emailExists = await _userRepository.EmailExistsAsync(request.Email);
+                if (emailExists)
+                {
+                    throw new Exception("Email already exists.");
+                }
+
+                // Map RegisterRequest to User entity
+                var newUser = _mapper.RegisterRequestToUser(request);
+
+                // Hash the password
+                newUser.PasswordHash = HashPassword(request.Password);
+
+                // Set default values
+                newUser.CreatedAt = DateTime.UtcNow;
+                newUser.IsActive = true;
+                newUser.RoleId = 1; // Assuming 1 is the default role (e.g., "User" role)
+
+                // Save to database - returns bool
+                var isCreated = await _userRepository.CreateUserAsync(newUser);
+
+                if (!isCreated)
+                {
+                    throw new Exception("Failed to create user. Email may already exist.");
+                }
+
+                // Get the created user with role information for mapping
+                var createdUser = await _userRepository.GetUserByEmailWithRoleAsync(request.Email);
+
+                if (createdUser == null)
+                {
+                    throw new Exception("User created but failed to retrieve user details.");
+                }
+
+                // Map to UserDTO and return
+                return _mapper.UserToUserDto(createdUser);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Registration failed: {ex.Message}");
+            }
+        }
         public async Task<bool> UpdatePasswordAsync(int userId, string newPassword)
         {
             try
@@ -93,26 +146,9 @@ namespace Service.Implements
             }
         }
 
-        public async Task<bool> RegisterAsync(RegisterRequest request)
-        {
-            try
-            {
-                var existingUser = await _userRepository.GetUserByEmailWithRoleAsync(request.Email);
-                if (existingUser != null)
-                {
-                    throw new Exception("Email already in use.");
-                }
-                var newUser = _mapper.RegisterRequestToUser(request);
-                newUser.IsActive = true;
-                newUser.RoleId = 1; // Default for new users
-                newUser.CreatedAt = DateTime.Now;
-                return await _userRepository.CreateUserAsync(newUser);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
+        
+
+
 
         #region Helper Methods
 
