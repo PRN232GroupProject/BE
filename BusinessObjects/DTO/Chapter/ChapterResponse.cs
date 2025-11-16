@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BusinessObjects.DTO.Lesson;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,5 +13,6 @@ namespace BusinessObjects.DTO.Chapter
         public string ChapterName { get; set; } 
         public int Grade { get; set; }
         public string? Description { get; set; }
+        public List<LessonResponse> Lessons { get; set; } = new();
     }
 }
