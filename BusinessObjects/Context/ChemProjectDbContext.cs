@@ -52,11 +52,6 @@ namespace BusinessObjects.Context
                 .HasForeignKey(r => r.LessonId);
 
             modelBuilder.Entity<Question>()
-                .HasOne(q => q.Chapter)
-                .WithMany(c => c.Questions)
-                .HasForeignKey(q => q.ChapterId);
-
-            modelBuilder.Entity<Question>()
                 .HasOne(q => q.Lesson)
                 .WithMany(l => l.Questions)
                 .HasForeignKey(q => q.LessonId);

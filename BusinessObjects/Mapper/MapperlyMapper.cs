@@ -36,7 +36,6 @@ namespace BusinessObjects.Mapper
 
         [MapProperty(nameof(UpdateChapterRequest.ChapterName), nameof(Chapter.Name))]
         [MapperIgnoreTarget(nameof(Chapter.Lessons))]
-        [MapperIgnoreTarget(nameof(Chapter.Questions))]
         public partial void UpdateChapterFromRequest(UpdateChapterRequest request, Chapter chapter);
 
     }

@@ -9,7 +9,6 @@ namespace BusinessObjects.Entities
     public class Question
     {
         public int Id { get; set; }
-        public int ChapterId { get; set; }
         public int LessonId { get; set; }
         public int CreatedById { get; set; }
 
@@ -21,7 +20,6 @@ namespace BusinessObjects.Entities
         public string? Difficulty { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public Chapter Chapter { get; set; } = null!;
         public Lesson Lesson { get; set; } = null!;
         public User CreatedBy { get; set; } = null!;
 

@@ -14,6 +14,5 @@ namespace BusinessObjects.Entities
         public string? Description { get; set; }
 
         public ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
-        public ICollection<Question> Questions { get; set; } = new List<Question>();
     }
 }
