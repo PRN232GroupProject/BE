@@ -45,7 +45,7 @@ namespace BusinessObjects.DAO.Implements
             try
             {
                 return await _context.Chapters
-                    .AsNoTracking() // Không track để tránh conflict
+                    .Include(c => c.Lessons)
                     .FirstOrDefaultAsync(c => c.Id == chapterId);
             }
             catch (Exception ex)
@@ -60,7 +60,7 @@ namespace BusinessObjects.DAO.Implements
             try
             {
                 return await _context.Chapters
-                    .AsNoTracking()
+                    .Include(c => c.Lessons)
                     .OrderBy(c => c.Grade)
                     .ThenBy(c => c.Name)
                     .ToListAsync();

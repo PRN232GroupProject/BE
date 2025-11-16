@@ -19,14 +19,17 @@ namespace Service.Implements
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserRepository _userRepository;
         private readonly IMapperlyMapper _mapper;
+        private readonly AuthService _authService;
 
         public UserService(IHttpContextAccessor httpContextAccessor, 
                            IUserRepository userRepository,
-                           IMapperlyMapper mapper)
+                           IMapperlyMapper mapper,
+                           AuthService authService)
         {
             _httpContextAccessor = httpContextAccessor;
             _userRepository = userRepository;
             _mapper = mapper;   
+            _authService = authService;
         }
 
         public async Task<bool> CreateUser(UserRequestDTO userRequest)
@@ -39,6 +42,8 @@ namespace Service.Implements
                 }
 
                 var user = _mapper.RequestDTOToUser(userRequest);
+                user.CreatedAt = DateTime.UtcNow;
+                user.PasswordHash = _authService.HashPassword(userRequest.Password);
                 return await _userRepository.CreateUserAsync(user);
             }
             catch (Exception ex)
@@ -125,7 +130,7 @@ namespace Service.Implements
                 }
 
                 var user = _mapper.RequestDTOToUser(userRequest);
-
+                user.PasswordHash = _authService.HashPassword(userRequest.Password);
                 return await _userRepository.UpdateUserAsync(user);
             }
             catch (Exception ex)

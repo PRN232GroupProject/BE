@@ -1,5 +1,6 @@
 ﻿using BusinessObjects.DTO;
 using BusinessObjects.DTO.Chapter;
+using BusinessObjects.DTO.Lesson;
 using BusinessObjects.DTO.Resource;
 using BusinessObjects.DTO.User;
 using BusinessObjects.DTO.User.Auth;
@@ -30,12 +31,25 @@ namespace BusinessObjects.Mapper
         [MapProperty(nameof(UserRequestDTO.Role), nameof(User.RoleId))]
         public partial User RequestDTOToUser(UserRequestDTO request);
 
+        // Lesson mappings
+        [MapProperty(nameof(Lesson.Id), nameof(LessonResponse.LessonId))]
+        public partial LessonResponse LessonToLessonResponse(Lesson lesson);
+        public partial List<LessonResponse> LessonsToLessonResponses(List<Lesson> lessons);
+        public partial Lesson CreateLessonRequestToLesson(CreateLessonRequest request);
+        // UpdateLessonRequest → Lesson (partial update)
+        [MapperIgnoreTarget(nameof(Lesson.CreatedAt))]
+        [MapperIgnoreTarget(nameof(Lesson.CreatedBy))]
+        [MapperIgnoreTarget(nameof(Lesson.Resources))]
+        [MapperIgnoreTarget(nameof(Lesson.Questions))]
+        public partial void UpdateLessonFromRequest(UpdateLessonRequest request, Lesson lesson);
+
         // Chapter mappings
 
         [MapProperty(nameof(CreateChapterRequest.ChapterName), nameof(Chapter.Name))]
         public partial Chapter CreateChapterRequestToChapter(CreateChapterRequest request);
         [MapProperty(nameof(Chapter.Name), nameof(ChapterResponse.ChapterName))]
         [MapProperty(nameof(Chapter.Id), nameof(ChapterResponse.ChapterId))]
+        [MapProperty(nameof(Chapter.Lessons), nameof(ChapterResponse.Lessons))]
         public partial ChapterResponse ChapterToChapterResponse(Chapter chapter);
         public partial List<ChapterResponse> ChaptersToChapterResponses(List<Chapter> chapters);
 
