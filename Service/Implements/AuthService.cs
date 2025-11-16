@@ -154,12 +154,12 @@ namespace Service.Implements
 
         #region Helper Methods
 
-        private static string HashPassword(string password)
+        public string HashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password, workFactor: 12);
         }
 
-        private static bool VerifyPassword(string password, string hashedPassword)
+        public static bool VerifyPassword(string password, string hashedPassword)
         {
             try
             {
@@ -171,7 +171,7 @@ namespace Service.Implements
             }
         }
 
-        private static bool IsBCryptHash(string password)
+        public static bool IsBCryptHash(string password)
         {
             // BCrypt hashes start with $2a$, $2b$, $2y$, or $2x$ followed by cost
             return password != null &&

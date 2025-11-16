@@ -27,6 +27,7 @@ namespace ChemistryProjectPrep.API.Configurations
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IChapterRepository, ChapterRepository>();
             // Services
+            services.AddScoped<AuthService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IChapterService, ChapterService>();
