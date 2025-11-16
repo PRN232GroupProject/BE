@@ -27,5 +27,7 @@ namespace BusinessObjects.Mapper
         void UpdateChapterFromRequest(UpdateChapterRequest request, Chapter chapter);
         List<LessonResponse> LessonsToLessonResponses(List<Lesson> lessons);
         LessonResponse LessonToLessonResponse(Lesson lesson);
+        Lesson CreateLessonRequestToLesson(CreateLessonRequest request);
+        void UpdateLessonFromRequest(UpdateLessonRequest request, Lesson lesson);
     }
 }

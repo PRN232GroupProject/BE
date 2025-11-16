@@ -34,6 +34,13 @@ namespace BusinessObjects.Mapper
         [MapProperty(nameof(Lesson.Id), nameof(LessonResponse.LessonId))]
         public partial LessonResponse LessonToLessonResponse(Lesson lesson);
         public partial List<LessonResponse> LessonsToLessonResponses(List<Lesson> lessons);
+        public partial Lesson CreateLessonRequestToLesson(CreateLessonRequest request);
+        // UpdateLessonRequest → Lesson (partial update)
+        [MapperIgnoreTarget(nameof(Lesson.CreatedAt))]
+        [MapperIgnoreTarget(nameof(Lesson.CreatedBy))]
+        [MapperIgnoreTarget(nameof(Lesson.Resources))]
+        [MapperIgnoreTarget(nameof(Lesson.Questions))]
+        public partial void UpdateLessonFromRequest(UpdateLessonRequest request, Lesson lesson);
 
         // Chapter mappings
 
