@@ -1,5 +1,6 @@
 ﻿using BusinessObjects.DTO;
 using BusinessObjects.DTO.Chapter;
+using BusinessObjects.DTO.Lesson;
 using BusinessObjects.DTO.User;
 using BusinessObjects.DTO.User.Auth;
 using BusinessObjects.Entities;
@@ -24,5 +25,7 @@ namespace BusinessObjects.Mapper
         ChapterResponse ChapterToChapterResponse(Chapter chapter);
         List<ChapterResponse> ChaptersToChapterResponses(List<Chapter> chapters);
         void UpdateChapterFromRequest(UpdateChapterRequest request, Chapter chapter);
+        List<LessonResponse> LessonsToLessonResponses(List<Lesson> lessons);
+        LessonResponse LessonToLessonResponse(Lesson lesson);
     }
 }
