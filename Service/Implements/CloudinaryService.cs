@@ -18,7 +18,6 @@ namespace Service.Implements
     public class CloudinaryService(IServiceProvider serviceProvider) : ICloudinaryService
     {
         private readonly Cloudinary _cloudinary = new Cloudinary(CloudinarySetting.Instance.CloudinaryUrl);
-        private readonly ILogger _logger = serviceProvider.GetRequiredService<ILogger>();
 
         public async Task<string> UploadImageAsync(IFormFile file)
         {

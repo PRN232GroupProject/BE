@@ -62,16 +62,26 @@ namespace BusinessObjects.Mapper
 
         //Resource mappings
         [MapProperty(nameof(CreateResourceRequest.ResourceTitle), nameof(Resource.Title))]
+        [MapProperty(nameof(CreateResourceRequest.ResourceType), nameof(Resource.Type))]
+        [MapProperty(nameof(CreateResourceRequest.ResourceUrl), nameof(Resource.Url))]
+        [MapProperty(nameof(CreateResourceRequest.ResourceDescription), nameof(Resource.Description))]
         public partial Resource CreateResourceRequestToResource(CreateResourceRequest request);
 
 
         [MapProperty(nameof(Resource.Id), nameof(ResourceResponse.ResourceId))]
+        [MapProperty(nameof(Resource.LessonId), nameof(ResourceResponse.LessonId))]
         [MapProperty(nameof(Resource.Title), nameof(ResourceResponse.ResourceTitle))]
+        [MapProperty(nameof(Resource.Type), nameof(ResourceResponse.ResourceType))]
+        [MapProperty(nameof(Resource.Url), nameof(ResourceResponse.ResourceUrl))]
+        [MapProperty(nameof(Resource.Description), nameof(ResourceResponse.ResourceDescription))]
         public partial ResourceResponse ResourceToResourceResponse(Resource resource);
         public partial List<ResourceResponse> ResourcesToResourceResponses(List<Resource> resources);
 
 
         [MapProperty(nameof(UpdateResourceRequest.ResourceTitle), nameof(Resource.Title))]
+        [MapProperty(nameof(UpdateResourceRequest.ResourceType), nameof(Resource.Type))]
+        [MapProperty(nameof(UpdateResourceRequest.ResourceUrl), nameof(Resource.Url))]
+        [MapProperty(nameof(UpdateResourceRequest.ResourceDescription), nameof(Resource.Description))]
         public partial void UpdateResourceFromRequest(UpdateResourceRequest request, Resource resource);
     }
 }

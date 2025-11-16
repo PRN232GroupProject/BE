@@ -157,10 +157,13 @@ namespace Service.Implements
                 }
 
                 // Update properties manually to avoid tracking issues
+                existingResource.LessonId = request.LessonId;
                 existingResource.Title = request.ResourceTitle;
+                existingResource.Type = request.ResourceType;
+                existingResource.Url = request.ResourceUrl;
                 existingResource.Description = request.ResourceDescription;
 
-                Console.WriteLine($"Updated properties - Title: {existingResource.Title}");
+                Console.WriteLine($"Updated properties - Lesson ID: {existingResource.LessonId}, Title: {existingResource.Title}, Type: {existingResource.Type}, Url: {existingResource.Url}, Description: {existingResource.Description}");
 
                 // Save changes
                 var isUpdated = await _resourceRepository.UpdateResourceAsync(existingResource);
