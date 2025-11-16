@@ -1,6 +1,7 @@
 ﻿using BusinessObjects.DTO;
 using BusinessObjects.DTO.Chapter;
 using BusinessObjects.DTO.Lesson;
+using BusinessObjects.DTO.Resource;
 using BusinessObjects.DTO.User;
 using BusinessObjects.DTO.User.Auth;
 using BusinessObjects.Entities;
@@ -58,5 +59,19 @@ namespace BusinessObjects.Mapper
         [MapperIgnoreTarget(nameof(Chapter.Lessons))]
         public partial void UpdateChapterFromRequest(UpdateChapterRequest request, Chapter chapter);
 
+
+        //Resource mappings
+        [MapProperty(nameof(CreateResourceRequest.ResourceTitle), nameof(Resource.Title))]
+        public partial Resource CreateResourceRequestToResource(CreateResourceRequest request);
+
+
+        [MapProperty(nameof(Resource.Id), nameof(ResourceResponse.ResourceId))]
+        [MapProperty(nameof(Resource.Title), nameof(ResourceResponse.ResourceTitle))]
+        public partial ResourceResponse ResourceToResourceResponse(Resource resource);
+        public partial List<ResourceResponse> ResourcesToResourceResponses(List<Resource> resources);
+
+
+        [MapProperty(nameof(UpdateResourceRequest.ResourceTitle), nameof(Resource.Title))]
+        public partial void UpdateResourceFromRequest(UpdateResourceRequest request, Resource resource);
     }
 }

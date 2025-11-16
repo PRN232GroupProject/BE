@@ -42,6 +42,7 @@ namespace Repository.Implements
         {
             return await _chapterDao.DeleteChapterAsync(chapterId);
         }
+
         public async Task<bool> ChapterNameExistsAsync(string chapterName, int grade, int? excludeId = null)
         {
             return await _chapterDao.ChapterNameExistsAsync(chapterName, grade, excludeId);
