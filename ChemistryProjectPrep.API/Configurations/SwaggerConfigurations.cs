@@ -10,7 +10,7 @@ namespace ChemistryProjectPrep.API.Configurations
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Auth API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ChemistryLessons API", Version = "v1" });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. Enter your token here.",

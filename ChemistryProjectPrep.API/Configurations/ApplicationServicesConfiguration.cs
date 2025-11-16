@@ -22,14 +22,22 @@ namespace ChemistryProjectPrep.API.Configurations
             // DAOs
             services.AddScoped<IUserDAO, UserDAO>();
             services.AddScoped<IChapterDAO, ChapterDAO>();
+            services.AddScoped<IResourceDAO, ResourceDAO>();
 
             // Repositories
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IChapterRepository, ChapterRepository>();
+            services.AddScoped<IResourceRepository, ResourceRepository>();
+
             // Services
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IChapterService, ChapterService>();
+            services.AddScoped<IResourceService, ResourceService>();
+
+            //Customer Services
+
+
             return services;
         }
     }
