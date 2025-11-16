@@ -71,5 +71,12 @@ namespace BusinessObjects.DAO.Implements
             return true;
 
         }
+
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        {
+            return await _context.Users
+                .Include(u => u.Role)
+                .ToListAsync();
+        }
     }
 }

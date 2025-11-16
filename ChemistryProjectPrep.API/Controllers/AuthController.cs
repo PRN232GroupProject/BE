@@ -6,6 +6,7 @@ using System.Security.Claims;
 using BusinessObjects.Metadata;
 using BusinessObjects.DTO;
 using ChemistryProjectPrep.API.Constants;
+using BusinessObjects.DTO.User.Auth;
 
 namespace ChemistryProjectPrep.API.Controllers
 {

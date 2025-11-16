@@ -16,5 +16,6 @@ namespace BusinessObjects.DAO.Interfaces
         Task<bool> UpdateUserAsync(User user);
         Task<bool> CreateUserAsync(User user);
         Task<bool> DeleteUserAsync(int userId);
+        Task<IEnumerable<User>> GetAllUsersAsync();
     }
 }

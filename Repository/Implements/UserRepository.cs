@@ -55,6 +55,11 @@ namespace Repository.Implements
             }
             await _userDao.DeleteUserAsync(userId);
             return true;
-        }   
+        }
+
+        public Task<IEnumerable<User>> GetAllUsersAsync()
+        {
+            return _userDao.GetAllUsersAsync();
+        }
     }
 }
