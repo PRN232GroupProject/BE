@@ -1,5 +1,7 @@
 ﻿using BusinessObjects.DTO;
 using BusinessObjects.DTO.Chapter;
+using BusinessObjects.DTO.User;
+using BusinessObjects.DTO.User.Auth;
 using BusinessObjects.Entities;
 using Riok.Mapperly.Abstractions;
 using System;
@@ -23,8 +25,12 @@ namespace BusinessObjects.Mapper
 
         // RegisterRequest to User mapping
         public partial User RegisterRequestToUser(RegisterRequest request);
+
+        [MapProperty(nameof(UserRequestDTO.Role), nameof(User.RoleId))]
+        public partial User RequestDTOToUser(UserRequestDTO request);
+
         // Chapter mappings
-       
+
         [MapProperty(nameof(CreateChapterRequest.ChapterName), nameof(Chapter.Name))]
         public partial Chapter CreateChapterRequestToChapter(CreateChapterRequest request);
         [MapProperty(nameof(Chapter.Name), nameof(ChapterResponse.ChapterName))]

@@ -73,8 +73,8 @@ namespace Service.Implements
                     {
                         stringRole = roleValue switch
                         {
-                            1 => "Adminstrator",
-                            2 => "Staff",
+                            1 => "Staff",
+                            2 => "Admin",
                             3 => "Student",
                             _ => "Unknown" // Default to Member if unrecognized
                         };

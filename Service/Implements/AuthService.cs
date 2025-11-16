@@ -1,4 +1,6 @@
 ﻿using BusinessObjects.DTO;
+using BusinessObjects.DTO.User;
+using BusinessObjects.DTO.User.Auth;
 using BusinessObjects.Entities;
 using BusinessObjects.Mapper;
 using Microsoft.Extensions.Configuration;
