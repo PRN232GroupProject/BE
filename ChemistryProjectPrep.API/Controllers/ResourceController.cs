@@ -210,6 +210,70 @@ namespace ChemistryProjectPrep.API.Controllers
             }
         }
 
+        [HttpPut("/mark/{id}")]
+        [Authorize(Roles = "Staff,Admin")]
+        public async Task<ActionResult<ApiResponse<bool>>> MarkCompletedResource(int id)
+        {
+            try
+            {
+
+                _logger.LogInformation($"Marking resource with ID: {id}");
+
+                var updated = await _resourceService.MarkCompletedResourceAsync(id);
+                var successResponse = ApiResponseBuilder.BuildResponse(
+                    200,
+                    "Resource updated successfully.",
+                    updated
+                );
+
+                return Ok(successResponse);
+            }
+
+            catch (ArgumentException argEx)
+            {
+                _logger.LogWarning(argEx, "Validation error updating resource");
+                var response = ApiResponseBuilder.BuildResponse<bool>(
+                    400,
+                    $"Bad request: {argEx.Message}",
+                    false
+                );
+                return BadRequest(response);
+            }
+
+            catch (KeyNotFoundException notFoundEx)
+            {
+                _logger.LogWarning(notFoundEx, "Resource not found for update");
+                var response = ApiResponseBuilder.BuildResponse<bool>(
+                    404,
+                    $"Not found: {notFoundEx.Message}",
+                    false
+                );
+                return NotFound(response);
+            }
+
+            catch (InvalidOperationException invOpEx)
+            {
+                _logger.LogWarning(invOpEx, "Conflict error updating resource");
+                var response = ApiResponseBuilder.BuildResponse<bool>(
+                    409,
+                    $"Conflict: {invOpEx.Message}",
+                    false
+                );
+                return Conflict(response);
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error updating resource with ID {id}");
+                var response = ApiResponseBuilder.BuildResponse<bool>(
+                    500,
+                    $"Internal server error: {ex.Message}",
+                    false
+                );
+                return StatusCode(500, response);
+            }
+        }
+
         [HttpDelete("{id}")]
         [Authorize(Roles = "Staff,Admin")]
         public async Task<ActionResult<ApiResponse<object>>> DeleteResource(int id)

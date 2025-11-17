@@ -15,5 +15,6 @@ namespace Repository.Interfaces
         Task<bool> UpdateResourceAsync(Resource resource);
         Task<bool> DeleteResourceAsync(int resourceId);
         Task<bool> CheckExistingResourceAsync(string resourceTitle);
+        Task<bool> MarkCompletedResourceAsnyc(int resourceId);
     }
 }
