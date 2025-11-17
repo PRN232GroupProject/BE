@@ -24,12 +24,14 @@ namespace ChemistryProjectPrep.API.Configurations
             services.AddScoped<IChapterDAO, ChapterDAO>();
             services.AddScoped<ILessonDAO, LessonDAO>();
             services.AddScoped<IResourceDAO, ResourceDAO>();
+            services.AddScoped<IQuestionDAO, QuestionDAO>();
 
             // Repositories
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IChapterRepository, ChapterRepository>();
             services.AddScoped<ILessonRepository, LessonRepository>();
             services.AddScoped<IResourceRepository, ResourceRepository>();
+            services.AddScoped<IQuestionRepository, QuestionRepository>();
 
             // Services
             services.AddScoped<AuthService>();
@@ -38,7 +40,7 @@ namespace ChemistryProjectPrep.API.Configurations
             services.AddScoped<IChapterService, ChapterService>();
             services.AddScoped<ILessonService, LessonService>();
             services.AddScoped<IResourceService, ResourceService>();
-
+            services.AddScoped<IQuestionService, QuestionService>();    
             //Customer Services
 
 

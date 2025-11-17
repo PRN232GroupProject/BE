@@ -1,6 +1,7 @@
 ﻿using BusinessObjects.DTO;
 using BusinessObjects.DTO.Chapter;
 using BusinessObjects.DTO.Lesson;
+using BusinessObjects.DTO.Question;
 using BusinessObjects.DTO.Resource;
 using BusinessObjects.DTO.User;
 using BusinessObjects.DTO.User.Auth;
@@ -10,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace BusinessObjects.Mapper
@@ -73,5 +75,54 @@ namespace BusinessObjects.Mapper
 
         [MapProperty(nameof(UpdateResourceRequest.ResourceTitle), nameof(Resource.Title))]
         public partial void UpdateResourceFromRequest(UpdateResourceRequest request, Resource resource);
+
+
+        // Question mappings
+
+        [MapperIgnoreTarget(nameof(Question.CreatedAt))]
+        [MapperIgnoreTarget(nameof(Question.CreatedBy))]
+        [MapperIgnoreTarget(nameof(Question.Lesson))]
+        [MapperIgnoreTarget(nameof(Question.CreatedById))] 
+        public partial Question CreateQuestionRequestToQuestion(CreateQuestionRequestDto request);
+
+      
+        [MapperIgnoreTarget(nameof(Question.CreatedAt))]
+        [MapperIgnoreTarget(nameof(Question.CreatedBy))]
+        [MapperIgnoreTarget(nameof(Question.Lesson))]
+        [MapperIgnoreTarget(nameof(Question.CreatedById))] 
+   
+        public partial void UpdateQuestionFromRequest(UpdateQuestionRequestDto request, Question question);
+        public partial QuestionResponseDto QuestionToQuestionResponseDto(Question question);
+        public partial List<QuestionResponseDto> QuestionsToQuestionResponseDtos(List<Question> questions);
+        protected string MapOptionsToString(Dictionary<string, string> options)
+        {
+            if (options == null || options.Count == 0)
+            {
+                return "{}";
+            }
+            return JsonSerializer.Serialize(options);
+        }
+
+        protected Dictionary<string, string> MapOptionsToDictionary(string optionsJson)
+        {
+            if (string.IsNullOrEmpty(optionsJson))
+            {
+                return new Dictionary<string, string>();
+            }
+            try
+            {
+                var jsonOptions = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+                return JsonSerializer.Deserialize<Dictionary<string, string>>(optionsJson, jsonOptions)
+                       ?? new Dictionary<string, string>();
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine($"Error deserializing Options JSON: {ex.Message}");
+                return new Dictionary<string, string>();
+            }
+        }
     }
 }
