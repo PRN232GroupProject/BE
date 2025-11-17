@@ -3,6 +3,7 @@ using BusinessObjects.DTO.Chapter;
 using BusinessObjects.DTO.Lesson;
 using BusinessObjects.DTO.Question;
 using BusinessObjects.DTO.Resource;
+using BusinessObjects.DTO.Test;
 using BusinessObjects.DTO.User;
 using BusinessObjects.DTO.User.Auth;
 using BusinessObjects.Entities;
@@ -44,5 +45,6 @@ namespace BusinessObjects.Mapper
         void UpdateQuestionFromRequest(UpdateQuestionRequestDto request, Question question);
         QuestionResponseDto QuestionToQuestionResponseDto(Question question);
         List<QuestionResponseDto> QuestionsToQuestionResponseDtos(List<Question> questions);
+      
     }
 }
