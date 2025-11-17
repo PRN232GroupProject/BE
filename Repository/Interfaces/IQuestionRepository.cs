@@ -14,5 +14,7 @@ namespace Repository.Interfaces
         Task<List<Question>> GetQuestionsAsync(int? lessonId, string? difficulty);
         Task<bool> UpdateQuestionAsync(Question question);
         Task<bool> DeleteQuestionAsync(int questionId);
+
+        Task<bool> IsQuestionInUseAsync(int questionId);
     }
 }

@@ -42,5 +42,9 @@ namespace Repository.Implements
         {
             return await _questionDao.DeleteQuestionAsync(questionId);
         }
+        public async Task<bool> IsQuestionInUseAsync(int questionId)
+        {
+            return await _questionDao.IsQuestionInUseAsync(questionId);
+        }
     }
 }

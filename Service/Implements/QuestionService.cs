@@ -122,13 +122,12 @@ namespace Service.Implements
                     throw new KeyNotFoundException($"Question with ID {questionId} not found.");
                 }
 
-                // *** LƯU Ý QUAN TRỌNG ***
-                // Khi bạn thêm bảng TestQuestion, bạn PHẢI thêm logic kiểm tra ở đây
-                // var isInUse = await _questionRepository.IsQuestionInUseAsync(questionId);
-                // if (isInUse)
-                // {
-                //    throw new InvalidOperationException("Cannot delete question that is in use by a test.");
-                // }
+               
+                 var isInUse = await _questionRepository.IsQuestionInUseAsync(questionId);
+                 if (isInUse)
+                 {
+                    throw new InvalidOperationException("Cannot delete question that is in use by a test.");
+                 }
                 return await _questionRepository.DeleteQuestionAsync(questionId);
             }
             catch (Exception ex)
