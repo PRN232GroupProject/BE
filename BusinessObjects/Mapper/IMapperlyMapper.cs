@@ -1,6 +1,7 @@
 ﻿using BusinessObjects.DTO;
 using BusinessObjects.DTO.Chapter;
 using BusinessObjects.DTO.Lesson;
+using BusinessObjects.DTO.Question;
 using BusinessObjects.DTO.Resource;
 using BusinessObjects.DTO.User;
 using BusinessObjects.DTO.User.Auth;
@@ -37,5 +38,11 @@ namespace BusinessObjects.Mapper
         ResourceResponse ResourceToResourceResponse(Resource resource);
         List<ResourceResponse> ResourcesToResourceResponses(List<Resource> resources);
         void UpdateResourceFromRequest(UpdateResourceRequest request, Resource resource);
+
+        //Question
+        Question CreateQuestionRequestToQuestion(CreateQuestionRequestDto request);
+        void UpdateQuestionFromRequest(UpdateQuestionRequestDto request, Question question);
+        QuestionResponseDto QuestionToQuestionResponseDto(Question question);
+        List<QuestionResponseDto> QuestionsToQuestionResponseDtos(List<Question> questions);
     }
 }
