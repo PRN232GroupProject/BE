@@ -1,8 +1,14 @@
+﻿using BusinessObjects.DTO.Test;
+using BusinessObjects.Metadata;
+using ChemistryProjectPrep.API.Constants;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 ﻿using BusinessObjects.DTO.TestSession;
 using BusinessObjects.Metadata;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
+using Repository.Interfaces;
 
 namespace ChemistryProjectPrep.API.Controllers
 {
@@ -14,7 +20,7 @@ namespace ChemistryProjectPrep.API.Controllers
         private readonly ILogger<TestSessionController> _logger;
         private readonly ITestSessionService _sessionService;
 
-        public TestSessionController(ILogger<TestSessionController> logger, ITestSessionService sessionService)
+        public TestSessionController(ILogger<TestSessionController> logger, ITestSessionService sessionService, IStudentTestSessionRepository service)
         {
             _logger = logger;
             _sessionService = sessionService;
@@ -242,6 +248,21 @@ namespace ChemistryProjectPrep.API.Controllers
 
                 return StatusCode(500, response);
             }
+        }
+        
+        [HttpGet("user/{userId}/test/{testId}")]
+        [Authorize(Roles = "Admin,Staff,Student")]
+        public async Task<IActionResult> GetByUserAndTest(int userId, int testId)
+        {
+            var sessions = await _sessionService.GetSessionsByUserAsync(userId, testId);
+
+            var response = ApiResponseBuilder.BuildResponse(
+                200,
+                "Success",
+                sessions
+            );
+
+            return Ok(response);
         }
     }
 }

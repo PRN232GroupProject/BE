@@ -1,14 +1,16 @@
-﻿using BusinessObjects.DTO.TestSession;
+﻿using BusinessObjects.DTO.Test;
+using BusinessObjects.DTO.TestSession;
 using BusinessObjects.Mapper;
 using Microsoft.Extensions.Logging;
 using Repository.Interfaces;
 using Service.Interfaces;
 
 namespace Service.Implements
-{
+{   
     public class TestSessionService : ITestSessionService
     {
         private readonly ITestSessionRepository _sessionRepository;
+        private readonly IStudentTestSessionRepository _sessionRepo;
         private readonly IMapperlyMapper _mapper;
 
         public TestSessionService(ITestSessionRepository sessionRepository, IMapperlyMapper mapper)
@@ -149,6 +151,22 @@ namespace Service.Implements
                 // Return updated session
                 var response = _mapper.TestSessionToTestSessionResponse(existingSession);
                 return response;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in UpdateTestSessionAsync: {ex.Message}");
+                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+                throw;
+            }
+        }
+        
+        public async Task<List<TestSessionResponse>> GetSessionsByUserAsync(int userId, int testId)
+        {
+            try
+            {
+                var sessions = await _sessionRepo.GetSessionsByUserAndTestAsync(userId, testId);
+
+                return _mapper.TestSessionsToTestSessionResponses(sessions);
             }
             catch (Exception ex)
             {
