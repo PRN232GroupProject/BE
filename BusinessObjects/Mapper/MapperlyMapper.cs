@@ -3,6 +3,7 @@ using BusinessObjects.DTO.Chapter;
 using BusinessObjects.DTO.Lesson;
 using BusinessObjects.DTO.Question;
 using BusinessObjects.DTO.Resource;
+using BusinessObjects.DTO.Test;
 using BusinessObjects.DTO.User;
 using BusinessObjects.DTO.User.Auth;
 using BusinessObjects.Entities;
@@ -104,6 +105,26 @@ namespace BusinessObjects.Mapper
         public partial void UpdateQuestionFromRequest(UpdateQuestionRequestDto request, Question question);
         public partial QuestionResponseDto QuestionToQuestionResponseDto(Question question);
         public partial List<QuestionResponseDto> QuestionsToQuestionResponseDtos(List<Question> questions);
+        // ==========================================
+        // Test Session Mapping
+        // ==========================================
+
+        // CreateTestSessionRequest -> StudentTestSession
+        [MapperIgnoreTarget(nameof(StudentTestSession.Id))]
+        [MapperIgnoreTarget(nameof(StudentTestSession.StudentAnswers))]
+        public partial StudentTestSession CreateTestSessionRequestToStudentTestSession(CreateTestSessionRequest request);
+
+
+        // StudentTestSession -> StudentTestSessionResponse
+        [MapProperty(nameof(StudentTestSession.Id), nameof(StudentTestSessionResponse.SessionId))]
+        [MapProperty(nameof(StudentTestSession.StudentAnswers), nameof(StudentTestSessionResponse.Answers))]
+        public partial StudentTestSessionResponse StudentTestSessionToResponse(StudentTestSession entity);
+
+
+        // StudentAnswer -> StudentAnswerResponse
+        public partial StudentAnswerResponse StudentAnswerToStudentAnswerResponse(StudentAnswer answer);
+        public partial List<StudentAnswerResponse> StudentAnswersToResponses(List<StudentAnswer> answers);
+
         protected string MapOptionsToString(Dictionary<string, string> options)
         {
             if (options == null || options.Count == 0)

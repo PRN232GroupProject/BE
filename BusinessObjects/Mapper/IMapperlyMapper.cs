@@ -45,6 +45,7 @@ namespace BusinessObjects.Mapper
         void UpdateQuestionFromRequest(UpdateQuestionRequestDto request, Question question);
         QuestionResponseDto QuestionToQuestionResponseDto(Question question);
         List<QuestionResponseDto> QuestionsToQuestionResponseDtos(List<Question> questions);
-      
+        StudentTestSession CreateTestSessionRequestToStudentTestSession(CreateTestSessionRequest request);
+        StudentTestSessionResponse StudentTestSessionToResponse(StudentTestSession entity);
     }
 }

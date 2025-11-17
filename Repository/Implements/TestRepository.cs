@@ -1,5 +1,6 @@
 ﻿using BusinessObjects.DAO.Interfaces;
 using BusinessObjects.Entities;
+using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Repository.Implements
 {
-    public class TestRepository
+    public class TestRepository : ITestRepository
     {
         private readonly ITestDAO _testDAO;
 
