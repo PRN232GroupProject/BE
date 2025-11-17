@@ -5,6 +5,7 @@ using BusinessObjects.DTO.Question;
 using BusinessObjects.DTO.Resource;
 using BusinessObjects.DTO.User;
 using BusinessObjects.DTO.User.Auth;
+using BusinessObjects.DTO.Test;
 using BusinessObjects.Entities;
 using Riok.Mapperly.Abstractions;
 using System;
@@ -17,7 +18,7 @@ using System.Threading.Tasks;
 namespace BusinessObjects.Mapper
 {
     [Mapper]
-    public partial class MapperlyMapper : IMapperlyMapper
+    public partial class MapperlyMapper : MapperHelperBase, IMapperlyMapper
     {
         // User to UserDto mapping
         [MapProperty(nameof(User.Role.Name), nameof(UserDTO.Role))]
@@ -46,7 +47,6 @@ namespace BusinessObjects.Mapper
         public partial void UpdateLessonFromRequest(UpdateLessonRequest request, Lesson lesson);
 
         // Chapter mappings
-
         [MapProperty(nameof(CreateChapterRequest.ChapterName), nameof(Chapter.Name))]
         public partial Chapter CreateChapterRequestToChapter(CreateChapterRequest request);
         [MapProperty(nameof(Chapter.Name), nameof(ChapterResponse.ChapterName))]
@@ -55,8 +55,7 @@ namespace BusinessObjects.Mapper
         public partial ChapterResponse ChapterToChapterResponse(Chapter chapter);
         public partial List<ChapterResponse> ChaptersToChapterResponses(List<Chapter> chapters);
 
-        // Update mapping - map only the fields that should be updated
-
+        // Update mapping
         [MapProperty(nameof(UpdateChapterRequest.ChapterName), nameof(Chapter.Name))]
         [MapperIgnoreTarget(nameof(Chapter.Lessons))]
         public partial void UpdateChapterFromRequest(UpdateChapterRequest request, Chapter chapter);
@@ -69,7 +68,6 @@ namespace BusinessObjects.Mapper
         [MapProperty(nameof(CreateResourceRequest.ResourceDescription), nameof(Resource.Description))]
         public partial Resource CreateResourceRequestToResource(CreateResourceRequest request);
 
-
         [MapProperty(nameof(Resource.Id), nameof(ResourceResponse.ResourceId))]
         [MapProperty(nameof(Resource.LessonId), nameof(ResourceResponse.LessonId))]
         [MapProperty(nameof(Resource.Title), nameof(ResourceResponse.ResourceTitle))]
@@ -79,7 +77,6 @@ namespace BusinessObjects.Mapper
         public partial ResourceResponse ResourceToResourceResponse(Resource resource);
         public partial List<ResourceResponse> ResourcesToResourceResponses(List<Resource> resources);
 
-
         [MapProperty(nameof(UpdateResourceRequest.ResourceTitle), nameof(Resource.Title))]
         [MapProperty(nameof(UpdateResourceRequest.ResourceType), nameof(Resource.Type))]
         [MapProperty(nameof(UpdateResourceRequest.ResourceUrl), nameof(Resource.Url))]
@@ -88,51 +85,43 @@ namespace BusinessObjects.Mapper
 
 
         // Question mappings
-
         [MapperIgnoreTarget(nameof(Question.CreatedAt))]
         [MapperIgnoreTarget(nameof(Question.CreatedBy))]
         [MapperIgnoreTarget(nameof(Question.Lesson))]
-        [MapperIgnoreTarget(nameof(Question.CreatedById))] 
+        [MapperIgnoreTarget(nameof(Question.CreatedById))]
         public partial Question CreateQuestionRequestToQuestion(CreateQuestionRequestDto request);
 
-      
         [MapperIgnoreTarget(nameof(Question.CreatedAt))]
         [MapperIgnoreTarget(nameof(Question.CreatedBy))]
         [MapperIgnoreTarget(nameof(Question.Lesson))]
-        [MapperIgnoreTarget(nameof(Question.CreatedById))] 
-   
+        [MapperIgnoreTarget(nameof(Question.CreatedById))]
         public partial void UpdateQuestionFromRequest(UpdateQuestionRequestDto request, Question question);
-        public partial QuestionResponseDto QuestionToQuestionResponseDto(Question question);
-        public partial List<QuestionResponseDto> QuestionsToQuestionResponseDtos(List<Question> questions);
-        protected string MapOptionsToString(Dictionary<string, string> options)
-        {
-            if (options == null || options.Count == 0)
-            {
-                return "{}";
-            }
-            return JsonSerializer.Serialize(options);
-        }
 
-        protected Dictionary<string, string> MapOptionsToDictionary(string optionsJson)
-        {
-            if (string.IsNullOrEmpty(optionsJson))
-            {
-                return new Dictionary<string, string>();
-            }
-            try
-            {
-                var jsonOptions = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                };
-                return JsonSerializer.Deserialize<Dictionary<string, string>>(optionsJson, jsonOptions)
-                       ?? new Dictionary<string, string>();
-            }
-            catch (JsonException ex)
-            {
-                Console.WriteLine($"Error deserializing Options JSON: {ex.Message}");
-                return new Dictionary<string, string>();
-            }
-        }
+        public partial QuestionResponseDto QuestionToQuestionResponseDto(Question question);
+        public override partial List<QuestionResponseDto> QuestionsToQuestionResponseDtos(List<Question> questions);
+
+       
+
+        // Test mappings
+        [MapperIgnoreTarget(nameof(Test.CreatedAt))]
+        [MapperIgnoreTarget(nameof(Test.CreatedBy))]
+        [MapperIgnoreTarget(nameof(Test.StudentTestSessions))]
+        [MapperIgnoreTarget(nameof(Test.TestQuestions))]
+        [MapperIgnoreTarget(nameof(Test.CreatedById))] 
+        public partial Test CreateTestRequestToTest(CreateTestRequestDto request);
+
+        [MapperIgnoreTarget(nameof(Test.CreatedAt))]
+        [MapperIgnoreTarget(nameof(Test.CreatedBy))]
+        [MapperIgnoreTarget(nameof(Test.StudentTestSessions))]
+        [MapperIgnoreTarget(nameof(Test.TestQuestions))]
+        [MapperIgnoreTarget(nameof(Test.CreatedById))] 
+        public partial void UpdateTestFromRequest(UpdateTestRequestDto request, Test test);
+
+        [MapperIgnoreTarget(nameof(TestResponseDto.Questions))] 
+        public partial List<TestResponseDto> TestsToTestResponseDtos(List<Test> tests);
+
+        [MapProperty(nameof(Test.TestQuestions), nameof(TestResponseDto.Questions))]
+        [MapProperty(nameof(Test.CreatedById), nameof(TestResponseDto.CreatedBy))] 
+        public partial TestResponseDto TestToTestResponseDto(Test test);
     }
 }

@@ -9,8 +9,8 @@ namespace Service.Interfaces
 {
     public interface IQuestionService
     {
-       
-        Task<QuestionResponseDto> CreateQuestionAsync(CreateQuestionRequestDto request, int creatorId);
+
+        Task<QuestionResponseDto> CreateQuestionAsync(CreateQuestionRequestDto request);
         Task<QuestionResponseDto?> GetQuestionByIdAsync(int questionId);
         Task<List<QuestionResponseDto>> GetQuestionsAsync(int? lessonId, string? difficulty);
         Task<QuestionResponseDto> UpdateQuestionAsync(UpdateQuestionRequestDto request);

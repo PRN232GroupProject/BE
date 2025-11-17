@@ -27,6 +27,7 @@ namespace ChemistryProjectPrep.API.Configurations
             services.AddScoped<ILessonDAO, LessonDAO>();
             services.AddScoped<IResourceDAO, ResourceDAO>();
             services.AddScoped<IQuestionDAO, QuestionDAO>();
+            services.AddScoped<ITestDAO, TestDAO>();
 
             // Repositories
             services.AddScoped<IUserRepository, UserRepository>();
@@ -34,6 +35,7 @@ namespace ChemistryProjectPrep.API.Configurations
             services.AddScoped<ILessonRepository, LessonRepository>();
             services.AddScoped<IResourceRepository, ResourceRepository>();
             services.AddScoped<IQuestionRepository, QuestionRepository>();
+            services.AddScoped<ITestRepository, TestRepository>();
 
             // Services
             services.AddScoped<AuthService>();
@@ -43,7 +45,7 @@ namespace ChemistryProjectPrep.API.Configurations
             services.AddScoped<ILessonService, LessonService>();
             services.AddScoped<IResourceService, ResourceService>();
             services.AddScoped<IQuestionService, QuestionService>();    
-            //Customer Services
+            services.AddScoped<ITestService, TestService>();
 
             // Custom Services
             services.AddScoped<ICloudinaryService, CloudinaryService>();

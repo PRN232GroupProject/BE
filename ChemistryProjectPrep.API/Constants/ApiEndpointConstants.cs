@@ -7,7 +7,7 @@
         public const string ApiEndpoint = "api";
         public const string AuthEndpoint = ApiEndpoint + "/auth";
         public const string UserEndpoint = ApiEndpoint + "/users";
-
+        public const string TestEndpoint = ApiEndpoint + "/tests";
         public static class Auth
         {
             public const string LoginEndpoint = AuthEndpoint + "/login";
@@ -28,6 +28,14 @@
             public const string CreateUserEndpoint = UserEndpoint;
             public const string UpdateUserEndpoint = UserEndpoint;
             public const string DeleteUserEndpoint = UserEndpoint;
+        }
+        public static class Test
+        {
+            public const string GetAllTestsEndpoint = TestEndpoint;
+            public const string GetTestByIdEndpoint = TestEndpoint + "/{id}";
+            public const string CreateTestEndpoint = TestEndpoint;
+            public const string UpdateTestEndpoint = TestEndpoint + "/{id}";
+            public const string DeleteTestEndpoint = TestEndpoint + "/{id}";
         }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using BusinessObjects.DTO.Question;
 using BusinessObjects.Mapper;
+using Microsoft.AspNetCore.Http;
 using Repository.Interfaces;
 using Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,31 +17,40 @@ namespace Service.Implements
         private readonly IQuestionRepository _questionRepository;
         private readonly IMapperlyMapper _mapper;
         private readonly ILessonRepository _lessonRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public QuestionService(IQuestionRepository questionRepository, IMapperlyMapper mapper, ILessonRepository lessonRepository)
+        public QuestionService(IQuestionRepository questionRepository, IMapperlyMapper mapper, ILessonRepository lessonRepository, IHttpContextAccessor httpContextAccessor)
         {
             _questionRepository = questionRepository;
             _mapper = mapper;
             _lessonRepository = lessonRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<QuestionResponseDto> CreateQuestionAsync(CreateQuestionRequestDto request, int creatorId)
+        public async Task<QuestionResponseDto> CreateQuestionAsync(CreateQuestionRequestDto request)
         {
             try
             {
-               
-                if (request.LessonId.HasValue)
-                 {
+                var userIdClaim = _httpContextAccessor.HttpContext?.User.Claims
+                    .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+                if (!int.TryParse(userIdClaim, out int creatorId))
+                {
+                    throw new UnauthorizedAccessException("User is not authenticated.");
+                }
+
+                if (request.LessonId.HasValue && request.LessonId > 0)
+                {
                     var lessonExists = await _lessonRepository.GetLessonByIdAsync(request.LessonId.Value);
-                   if (lessonExists == null)
-                       throw new ArgumentException($"Lesson with ID {request.LessonId} not found.");
+                    if (lessonExists == null)
+                        throw new ArgumentException($"Lesson with ID {request.LessonId} not found.");
                 }
 
                 var question = _mapper.CreateQuestionRequestToQuestion(request);
                 question.CreatedById = creatorId;
                 question.CreatedAt = DateTime.UtcNow;
-                var createdQuestion = await _questionRepository.CreateQuestionAsync(question);
 
+                var createdQuestion = await _questionRepository.CreateQuestionAsync(question);
                 if (createdQuestion == null)
                 {
                     throw new InvalidOperationException("Failed to create the question.");
@@ -52,7 +63,6 @@ namespace Service.Implements
                 throw;
             }
         }
-
         public async Task<QuestionResponseDto?> GetQuestionByIdAsync(int questionId)
         {
             try
@@ -70,7 +80,6 @@ namespace Service.Implements
                 throw;
             }
         }
-
         public async Task<List<QuestionResponseDto>> GetQuestionsAsync(int? lessonId, string? difficulty)
         {
             try
