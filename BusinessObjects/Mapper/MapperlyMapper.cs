@@ -1,8 +1,10 @@
 ﻿using BusinessObjects.DTO;
+using BusinessObjects.DTO.Answer;
 using BusinessObjects.DTO.Chapter;
 using BusinessObjects.DTO.Lesson;
 using BusinessObjects.DTO.Question;
 using BusinessObjects.DTO.Resource;
+using BusinessObjects.DTO.TestSession;
 using BusinessObjects.DTO.User;
 using BusinessObjects.DTO.User.Auth;
 using BusinessObjects.Entities;
@@ -62,7 +64,7 @@ namespace BusinessObjects.Mapper
         public partial void UpdateChapterFromRequest(UpdateChapterRequest request, Chapter chapter);
 
 
-        //Resource mappings
+        // Resource mappings
         [MapProperty(nameof(CreateResourceRequest.ResourceTitle), nameof(Resource.Title))]
         [MapProperty(nameof(CreateResourceRequest.ResourceType), nameof(Resource.Type))]
         [MapProperty(nameof(CreateResourceRequest.ResourceUrl), nameof(Resource.Url))]
@@ -92,15 +94,15 @@ namespace BusinessObjects.Mapper
         [MapperIgnoreTarget(nameof(Question.CreatedAt))]
         [MapperIgnoreTarget(nameof(Question.CreatedBy))]
         [MapperIgnoreTarget(nameof(Question.Lesson))]
-        [MapperIgnoreTarget(nameof(Question.CreatedById))] 
+        [MapperIgnoreTarget(nameof(Question.CreatedById))]
         public partial Question CreateQuestionRequestToQuestion(CreateQuestionRequestDto request);
 
-      
+
         [MapperIgnoreTarget(nameof(Question.CreatedAt))]
         [MapperIgnoreTarget(nameof(Question.CreatedBy))]
         [MapperIgnoreTarget(nameof(Question.Lesson))]
-        [MapperIgnoreTarget(nameof(Question.CreatedById))] 
-   
+        [MapperIgnoreTarget(nameof(Question.CreatedById))]
+
         public partial void UpdateQuestionFromRequest(UpdateQuestionRequestDto request, Question question);
         public partial QuestionResponseDto QuestionToQuestionResponseDto(Question question);
         public partial List<QuestionResponseDto> QuestionsToQuestionResponseDtos(List<Question> questions);
@@ -134,5 +136,53 @@ namespace BusinessObjects.Mapper
                 return new Dictionary<string, string>();
             }
         }
+
+
+        // Test Session mappings
+        [MapProperty(nameof(CreateTestSessionRequest.UserId), nameof(StudentTestSession.UserId))]
+        [MapProperty(nameof(CreateTestSessionRequest.TestId), nameof(StudentTestSession.TestId))]
+        [MapProperty(nameof(CreateTestSessionRequest.StartTime), nameof(StudentTestSession.StartTime))]
+        [MapProperty(nameof(CreateTestSessionRequest.EndTime), nameof(StudentTestSession.EndTime))]
+        [MapProperty(nameof(CreateTestSessionRequest.Score), nameof(StudentTestSession.Score))]
+        [MapProperty(nameof(CreateTestSessionRequest.Status), nameof(StudentTestSession.Status))]
+        public partial StudentTestSession CreateTestSessionRequestToTestSession(CreateTestSessionRequest request);
+
+        [MapProperty(nameof(StudentTestSession.Id), nameof(TestSessionResponse.Id))]
+        [MapProperty(nameof(StudentTestSession.UserId), nameof(TestSessionResponse.UserId))]
+        [MapProperty(nameof(StudentTestSession.TestId), nameof(TestSessionResponse.TestId))]
+        [MapProperty(nameof(StudentTestSession.StartTime), nameof(TestSessionResponse.StartTime))]
+        [MapProperty(nameof(StudentTestSession.EndTime), nameof(TestSessionResponse.EndTime))]
+        [MapProperty(nameof(StudentTestSession.Score), nameof(TestSessionResponse.Score))]
+        [MapProperty(nameof(StudentTestSession.Status), nameof(TestSessionResponse.Status))]
+        public partial TestSessionResponse TestSessionToTestSessionResponse(StudentTestSession session);
+        public partial List<TestSessionResponse> TestSessionsToTestSessionResponses(List<StudentTestSession> sessions);
+
+        [MapProperty(nameof(UpdateTestSessionRequest.Id), nameof(StudentTestSession.Id))]
+        [MapProperty(nameof(UpdateTestSessionRequest.UserId), nameof(StudentTestSession.UserId))]
+        [MapProperty(nameof(UpdateTestSessionRequest.TestId), nameof(StudentTestSession.TestId))]
+        [MapProperty(nameof(UpdateTestSessionRequest.StartTime), nameof(StudentTestSession.StartTime))]
+        [MapProperty(nameof(UpdateTestSessionRequest.EndTime), nameof(StudentTestSession.EndTime))]
+        [MapProperty(nameof(UpdateTestSessionRequest.Score), nameof(StudentTestSession.Score))]
+        [MapProperty(nameof(UpdateTestSessionRequest.Status), nameof(StudentTestSession.Status))]
+        public partial void UpdateTestSessionFromRequest(UpdateTestSessionRequest request, StudentTestSession session);
+
+        // Answer mappings
+        [MapProperty(nameof(CreateAnswerRequest.SessionId), nameof(StudentAnswer.SessionId))]
+        [MapProperty(nameof(CreateAnswerRequest.QuestionId), nameof(StudentAnswer.QuestionId))]
+        [MapProperty(nameof(CreateAnswerRequest.SelectedAnswer), nameof(StudentAnswer.SelectedAnswer))]
+        public partial StudentAnswer CreateAnswerRequestToAnswer(CreateAnswerRequest request);
+
+        [MapProperty(nameof(StudentAnswer.Id), nameof(AnswerResponse.Id))]
+        [MapProperty(nameof(StudentAnswer.SessionId), nameof(AnswerResponse.SessionId))]
+        [MapProperty(nameof(StudentAnswer.QuestionId), nameof(AnswerResponse.QuestionId))]
+        [MapProperty(nameof(StudentAnswer.SelectedAnswer), nameof(AnswerResponse.SelectedAnswer))]
+        public partial AnswerResponse AnswerToAnswerResponse(StudentAnswer answer);
+        public partial List<AnswerResponse> AnswersToAnswerResponses(List<StudentAnswer> answers);
+
+        [MapProperty(nameof(UpdateAnswerRequest.Id), nameof(StudentAnswer.Id))]
+        [MapProperty(nameof(UpdateAnswerRequest.SessionId), nameof(StudentAnswer.SessionId))]
+        [MapProperty(nameof(UpdateAnswerRequest.QuestionId), nameof(StudentAnswer.QuestionId))]
+        [MapProperty(nameof(UpdateAnswerRequest.SelectedAnswer), nameof(StudentAnswer.SelectedAnswer))]
+        public partial void UpdateAnswerFromRequest(UpdateAnswerRequest request, StudentAnswer answer);
     }
 }
