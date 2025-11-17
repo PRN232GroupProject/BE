@@ -5,7 +5,6 @@ using BusinessObjects.DTO.Lesson;
 using BusinessObjects.DTO.Question;
 using BusinessObjects.DTO.Resource;
 using BusinessObjects.DTO.Test;
-using BusinessObjects.DTO.TestSession;
 using BusinessObjects.DTO.User;
 using BusinessObjects.DTO.User.Auth;
 using BusinessObjects.Entities;
@@ -48,16 +47,11 @@ namespace BusinessObjects.Mapper
         QuestionResponseDto QuestionToQuestionResponseDto(Question question);
         List<QuestionResponseDto> QuestionsToQuestionResponseDtos(List<Question> questions);
 
-        // Test Session
-        StudentTestSession CreateTestSessionRequestToTestSession(CreateTestSessionRequest request);
-        TestSessionResponse TestSessionToTestSessionResponse(StudentTestSession session);
-        List<TestSessionResponse> TestSessionsToTestSessionResponses(List<StudentTestSession> sessions);
-        void UpdateTestSessionFromRequest(UpdateTestSessionRequest request, StudentTestSession session);
+        //Test
 
-        // Answers
-        StudentAnswer CreateAnswerRequestToAnswer(CreateAnswerRequest request);
-        AnswerResponse AnswerToAnswerResponse(StudentAnswer answer);
-        List<AnswerResponse> AnswersToAnswerResponses(List<StudentAnswer> answers);
-        void UpdateAnswerFromRequest(UpdateAnswerRequest request, StudentAnswer answer);
+        Test CreateTestRequestToTest(CreateTestRequestDto request);
+        void UpdateTestFromRequest(UpdateTestRequestDto request, Test test);
+        TestResponseDto TestToTestResponseDto(Test test);
+        List<TestResponseDto> TestsToTestResponseDtos(List<Test> tests);
     }
 }

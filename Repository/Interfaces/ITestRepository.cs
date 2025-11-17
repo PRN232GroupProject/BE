@@ -9,6 +9,11 @@ namespace Repository.Interfaces
 {
     public interface ITestRepository
     {
-        Task<Test?> GetTestWithQuestionsAsync(int testId);
+        Task<Test?> CreateTestAsync(Test test);
+        Task<Test?> GetTestByIdAsync(int testId);
+        Task<List<Test>> GetAllTestsAsync();
+        Task<bool> UpdateTestAsync(Test test);
+        Task<bool> DeleteTestAsync(int testId);
+        Task<bool> IsTestInUseAsync(int testId);
     }
 }

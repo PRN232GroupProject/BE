@@ -87,28 +87,21 @@ namespace ChemistryProjectPrep.API.Controllers
         {
             try
             {
-                var creatorId = GetUserIdFromClaims();
-                if (creatorId == null)
-                {
-                   
-                    return Unauthorized(ApiResponseBuilder.BuildResponse<QuestionResponseDto>(
-                        401, "User is not authenticated.", null
-                    ));
-                }
+                var newQuestion = await _questionService.CreateQuestionAsync(request);
 
-                _logger.LogInformation($"User {creatorId} creating new question.");
-                var newQuestion = await _questionService.CreateQuestionAsync(request, creatorId.Value);
                 return CreatedAtAction(nameof(GetQuestionById), new { id = newQuestion.Id },
                     ApiResponseBuilder.BuildResponse(
                         201, "Question created successfully.", newQuestion
                     )
                 );
             }
+            catch (UnauthorizedAccessException ex) 
+            {
+                return Unauthorized(ApiResponseBuilder.BuildResponse<QuestionResponseDto>(401, ex.Message, null));
+            }
             catch (ArgumentException ex)
             {
-                return BadRequest(ApiResponseBuilder.BuildResponse<QuestionResponseDto>(
-                    400, ex.Message, null
-                ));
+                return BadRequest(ApiResponseBuilder.BuildResponse<QuestionResponseDto>(400, ex.Message, null));
             }
             catch (Exception ex)
             {
@@ -118,6 +111,7 @@ namespace ChemistryProjectPrep.API.Controllers
                 ));
             }
         }
+
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin,Staff")]
         public async Task<ActionResult<ApiResponse<QuestionResponseDto>>> UpdateQuestion(int id, [FromBody] UpdateQuestionRequestDto request)
@@ -189,14 +183,6 @@ namespace ChemistryProjectPrep.API.Controllers
                 ));
             }
         }
-            private int? GetUserIdFromClaims()
-        {
-            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
-            {
-                return userId;
-            }
-            return null;
-        }
+
     }
 }
