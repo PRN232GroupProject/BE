@@ -15,11 +15,12 @@ namespace ChemistryProjectPrep.API.Controllers
     {
         private readonly ITestService _testService;
         private readonly ILogger<TestController> _logger;
-
-        public TestController(ITestService testService, ILogger<TestController> logger)
+        private readonly ITestQuestionService _testQuestionService;
+        public TestController(ITestService testService, ILogger<TestController> logger, ITestQuestionService testQuestionService)
         {
             _testService = testService;
             _logger = logger;
+            _testQuestionService = testQuestionService;
         }
 
         [HttpGet]
@@ -156,6 +157,63 @@ namespace ChemistryProjectPrep.API.Controllers
                 return StatusCode(500, ApiResponseBuilder.BuildResponse<object>(
                     500, $"Internal server error: {ex.Message}", null
                 ));
+            }
+        }
+        [HttpPost("{id}/questions")] 
+        [Authorize(Roles = "Admin,Staff")]
+        public async Task<ActionResult<ApiResponse<TestResponseDto>>> AddQuestionsToTest(
+            int id, [FromBody] AddQuestionsToTestRequestDto request)
+        {
+            try
+            {
+                var updatedTest = await _testQuestionService.AddQuestionsToTestAsync(id, request.QuestionIds);
+                return Ok(ApiResponseBuilder.BuildResponse(
+                    200, "Questions added to test successfully.", updatedTest
+                ));
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ApiResponseBuilder.BuildResponse<TestResponseDto>(404, ex.Message, null));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ApiResponseBuilder.BuildResponse<TestResponseDto>(400, ex.Message, null));
+            }
+            catch (InvalidOperationException ex) 
+            {
+                return Conflict(ApiResponseBuilder.BuildResponse<TestResponseDto>(409, ex.Message, null));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error adding questions to test {id}");
+                return StatusCode(500, ApiResponseBuilder.BuildResponse<TestResponseDto>(500, $"Internal server error: {ex.Message}", null));
+            }
+        }
+
+        [HttpDelete("{id}/questions/{questionId}")] 
+        [Authorize(Roles = "Admin,Staff")]
+        public async Task<ActionResult<ApiResponse<object>>> RemoveQuestionFromTest(int id, int questionId)
+        {
+            try
+            {
+                var result = await _testQuestionService.RemoveQuestionFromTestAsync(id, questionId);
+                if (!result)
+                {
+                    return NotFound(ApiResponseBuilder.BuildResponse<object>(404, $"Question {questionId} not found in test {id}.", null));
+                }
+
+                return Ok(ApiResponseBuilder.BuildResponse<object>(
+                    200, "Question removed from test successfully.", new { testId = id, removedQuestionId = questionId }
+                ));
+            }
+            catch (InvalidOperationException ex) 
+            {
+                return Conflict(ApiResponseBuilder.BuildResponse<object>(409, ex.Message, null));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error removing question {questionId} from test {id}");
+                return StatusCode(500, ApiResponseBuilder.BuildResponse<object>(500, $"Internal server error: {ex.Message}", null));
             }
         }
     }
