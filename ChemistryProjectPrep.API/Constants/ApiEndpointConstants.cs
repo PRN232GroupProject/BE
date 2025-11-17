@@ -7,7 +7,6 @@
         public const string ApiEndpoint = "api";
         public const string AuthEndpoint = ApiEndpoint + "/auth";
         public const string UserEndpoint = ApiEndpoint + "/users";
-      
 
         public static class Auth
         {
@@ -30,6 +29,5 @@
             public const string UpdateUserEndpoint = UserEndpoint;
             public const string DeleteUserEndpoint = UserEndpoint;
         }
-       
     }
 }
