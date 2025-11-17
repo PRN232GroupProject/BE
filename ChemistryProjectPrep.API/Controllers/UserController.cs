@@ -8,7 +8,7 @@ using Service.Interfaces;
 namespace ChemistryProjectPrep.API.Controllers
 {
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -40,6 +40,7 @@ namespace ChemistryProjectPrep.API.Controllers
         }
 
         [HttpGet(ApiEndpointConstants.User.GetAllUsersEndpoint)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllUsers()
         {
             try
@@ -59,6 +60,7 @@ namespace ChemistryProjectPrep.API.Controllers
         }
 
         [HttpGet(ApiEndpointConstants.User.GetUserEndpoint)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetUserById([FromRoute] int userId)
         {
             try
@@ -87,6 +89,7 @@ namespace ChemistryProjectPrep.API.Controllers
         }
 
         [HttpPost(ApiEndpointConstants.User.CreateUserEndpoint)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateUser([FromBody] UserRequestDTO userRequest)
         {
             try
@@ -106,6 +109,7 @@ namespace ChemistryProjectPrep.API.Controllers
         }
 
         [HttpPut(ApiEndpointConstants.User.UpdateUserEndpoint)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateUser([FromRoute] int userId, [FromBody] UserRequestDTO userRequest)
         {
             try
@@ -125,6 +129,7 @@ namespace ChemistryProjectPrep.API.Controllers
         }
 
         [HttpDelete(ApiEndpointConstants.User.DeleteUserEndpoint)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser([FromRoute] int userId)
         {
             try

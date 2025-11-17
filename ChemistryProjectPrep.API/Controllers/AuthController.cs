@@ -26,19 +26,19 @@ namespace ChemistryProjectPrep.API.Controllers
             try
             {
                 var response = await _authService.LoginAsync(request);
-                if (response == null)
-                {
-                    return Unauthorized(ApiResponseBuilder.BuildResponse<LoginResponse>(
-                        StatusCodes.Status401Unauthorized,
-                        "Invalid email or password.",
-                        null
-                    ));
-                }
-
+        
                 return Ok(ApiResponseBuilder.BuildResponse(
                     StatusCodes.Status200OK,
                     "Login successful.",
                     response
+                ));
+            }
+            catch (AuthenticationException ex)
+            {
+                return Unauthorized(ApiResponseBuilder.BuildResponse<LoginResponse>(
+                    StatusCodes.Status401Unauthorized,
+                    ex.Message,
+                    null
                 ));
             }
             catch (Exception)
@@ -51,6 +51,7 @@ namespace ChemistryProjectPrep.API.Controllers
                     ));
             }
         }
+        
 
         [HttpPost(ApiEndpointConstants.Auth.RegisterEndpoint)]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)

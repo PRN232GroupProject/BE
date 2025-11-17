@@ -1,17 +1,10 @@
-﻿using BusinessObjects.DTO;
-using BusinessObjects.DTO.User;
+﻿using BusinessObjects.DTO.User;
 using BusinessObjects.DTO.User.Auth;
-using BusinessObjects.Entities;
 using BusinessObjects.Mapper;
+using BusinessObjects.Metadata;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using Repository.Interfaces;
 using Service.Interfaces;
-using System.Data;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Principal;
-using System.Text;
 
 namespace Service.Implements
 {
@@ -42,12 +35,17 @@ namespace Service.Implements
             // Query logic được đóng gói trong repository
             var user = await _userRepository.GetUserByEmailWithRoleAsync(request.Email);
 
+            if (user == null)
+            {
+                throw new AuthenticationException("User not found.");
+            }
+
+
             bool isPasswordValid = VerifyPassword(request.Password, user?.PasswordHash ?? "");
 
             if (!isPasswordValid)
             {
-                Console.WriteLine("Password verification failed");
-                return new LoginResponse { };
+                throw new AuthenticationException("Invalid password.");
             }
 
             if (!IsBCryptHash(user.PasswordHash))
@@ -103,7 +101,7 @@ namespace Service.Implements
                 // Set default values
                 newUser.CreatedAt = DateTime.UtcNow;
                 newUser.IsActive = true;
-                newUser.RoleId = 1; // Assuming 1 is the default role (e.g., "User" role)
+                newUser.RoleId = 2; // Assuming 1 is the default role (e.g., "User" role)
 
                 // Save to database - returns bool
                 var isCreated = await _userRepository.CreateUserAsync(newUser);
@@ -148,7 +146,7 @@ namespace Service.Implements
             }
         }
 
-        
+
 
 
 

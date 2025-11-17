@@ -1,8 +1,11 @@
 ﻿using BusinessObjects.DTO;
+using BusinessObjects.DTO.Answer;
 using BusinessObjects.DTO.Chapter;
 using BusinessObjects.DTO.Lesson;
 using BusinessObjects.DTO.Question;
 using BusinessObjects.DTO.Resource;
+using BusinessObjects.DTO.Test;
+using BusinessObjects.DTO.TestSession;
 using BusinessObjects.DTO.User;
 using BusinessObjects.DTO.User.Auth;
 using BusinessObjects.DTO.Test;
@@ -61,7 +64,7 @@ namespace BusinessObjects.Mapper
         public partial void UpdateChapterFromRequest(UpdateChapterRequest request, Chapter chapter);
 
 
-        //Resource mappings
+        // Resource mappings
         [MapProperty(nameof(CreateResourceRequest.ResourceTitle), nameof(Resource.Title))]
         [MapProperty(nameof(CreateResourceRequest.ResourceType), nameof(Resource.Type))]
         [MapProperty(nameof(CreateResourceRequest.ResourceUrl), nameof(Resource.Url))]

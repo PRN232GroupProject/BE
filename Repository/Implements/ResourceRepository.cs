@@ -43,6 +43,11 @@ namespace Repository.Implements
             return await _resourceDao.GetResourceByIdAsync(resourceId);
         }
 
+        public async Task<bool> MarkCompletedResourceAsnyc(int resourceId)
+        {
+            return await _resourceDao.MarkCompletedResourceAsnyc(resourceId);
+        }
+
         public async Task<bool> UpdateResourceAsync(Resource resource)
         {
             return await _resourceDao.UpdateResourceAsync(resource);
