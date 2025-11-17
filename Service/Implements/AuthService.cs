@@ -109,7 +109,7 @@ namespace Service.Implements
                 // Set default values
                 newUser.CreatedAt = DateTime.UtcNow;
                 newUser.IsActive = true;
-                newUser.RoleId = 1; // Assuming 1 is the default role (e.g., "User" role)
+                newUser.RoleId = 2; // Assuming 1 is the default role (e.g., "User" role)
 
                 // Save to database - returns bool
                 var isCreated = await _userRepository.CreateUserAsync(newUser);
