@@ -12,6 +12,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
+using BusinessObjects.Metadata;
 
 namespace Service.Implements
 {
@@ -41,13 +42,18 @@ namespace Service.Implements
         {
             // Query logic được đóng gói trong repository
             var user = await _userRepository.GetUserByEmailWithRoleAsync(request.Email);
+                
+            if (user == null)
+            {
+                throw new AuthenticationException("User not found.");
+            }
+
 
             bool isPasswordValid = VerifyPassword(request.Password, user?.PasswordHash ?? "");
 
             if (!isPasswordValid)
             {
-                Console.WriteLine("Password verification failed");
-                return new LoginResponse { };
+                throw new AuthenticationException("Invalid password.");
             }
 
             if (!IsBCryptHash(user.PasswordHash))
