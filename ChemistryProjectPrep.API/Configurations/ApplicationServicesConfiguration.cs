@@ -2,8 +2,10 @@
 using BusinessObjects.DAO.Implements;
 using BusinessObjects.DAO.Interfaces;
 using BusinessObjects.Mapper;
+using Microsoft.Extensions.Options;
 using Repository.Implements;
 using Repository.Interfaces;
+using Service.Config;
 using Service.Implements;
 using Service.Interfaces;
 
@@ -11,7 +13,7 @@ namespace ChemistryProjectPrep.API.Configurations
 {
     public static class ApplicationServicesConfiguration
     {
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddHttpContextAccessor();
             services.AddScoped<TokenProvider>();
@@ -43,8 +45,22 @@ namespace ChemistryProjectPrep.API.Configurations
             services.AddScoped<IQuestionService, QuestionService>();    
             //Customer Services
 
+            // Custom Services
+            services.AddScoped<ICloudinaryService, CloudinaryService>();
+
+            // Third-Party Services
+            RegisterThirdPartyServices(services, configuration);
 
             return services;
+        }
+
+        private static void RegisterThirdPartyServices(IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<CloudinarySetting>(options =>
+            {
+                options.CloudinaryUrl = configuration["Cloudinary:CloudinaryUrl"];
+            });
+            CloudinarySetting.Instance = services.BuildServiceProvider().GetService<IOptions<CloudinarySetting>>().Value;
         }
     }
 }
