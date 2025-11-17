@@ -22,10 +22,9 @@ namespace BusinessObjects.Entities
 
         public Lesson Lesson { get; set; } = null!;
         public User CreatedBy { get; set; } = null!;
-        public Question()
-        {
-            CreatedAt = DateTime.UtcNow;
-            // (Không còn khởi tạo TestQuestions)
-        }
+
+        public ICollection<TestQuestion> TestQuestions { get; set; } = new List<TestQuestion>();
+        public ICollection<StudentAnswer> StudentAnswers { get; set; } = new List<StudentAnswer>();
+
     }
 }
