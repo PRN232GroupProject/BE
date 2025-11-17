@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BusinessObjects.DTO.Resource
+﻿namespace BusinessObjects.DTO.Resource
 {
     public class ResourceResponse
     {
@@ -14,5 +8,7 @@ namespace BusinessObjects.DTO.Resource
         public string? ResourceType { get; set; }
         public string? ResourceUrl { get; set; }
         public string? ResourceDescription { get; set; }
+        public bool? IsCompleted { get; set; }
+        public DateTime? CompletedAt { get; set; }
     }
 }

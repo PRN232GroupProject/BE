@@ -115,12 +115,22 @@ namespace BusinessObjects.DAO.Implements
                 throw;
             }
         }
-
+        public async Task<Question?> GetExplanationAsync(int questionId)
+        {
+            return await _context.Questions
+                .AsNoTracking()
+                .Select(q => new Question
+                {
+                    Id = q.Id,
+                    Explanation = q.Explanation
+                })
+                .FirstOrDefaultAsync(q => q.Id == questionId);
+        }
         //public async Task<bool> IsQuestionInUseAsync(int questionId)
         //{
         //    try
         //    {
-               
+
         //        var inUse = await _context.TestQuestions
         //            .AsNoTracking()
         //            .AnyAsync(tq => tq.QuestionId == questionId);
