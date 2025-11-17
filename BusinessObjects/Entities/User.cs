@@ -15,6 +15,11 @@ namespace BusinessObjects.Entities
         public string PasswordHash { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public bool IsActive { get; set; }
+
         public Role Role { get; set; } = null!;
+
+        public ICollection<Question> CreatedQuestions { get; set; } = new List<Question>();
+        public ICollection<Test> CreatedTests { get; set; } = new List<Test>();
+        public ICollection<StudentTestSession> StudentTestSessions { get; set; } = new List<StudentTestSession>();
     }
 }
