@@ -8,7 +8,6 @@ using Service.Interfaces;
 namespace ChemistryProjectPrep.API.Controllers
 {
     [ApiController]
-    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -19,6 +18,7 @@ namespace ChemistryProjectPrep.API.Controllers
         }
 
         [HttpGet(ApiEndpointConstants.User.GetCurrentUserEndpoint)]
+        [Authorize(Roles = "Admin, Staff, Student")]
         public async Task<IActionResult> GetUserByToken()
         {
             try
@@ -138,6 +138,46 @@ namespace ChemistryProjectPrep.API.Controllers
                 var response = ApiResponseBuilder.BuildResponse(
                     statusCode: 200,
                     message: "User deleted successfully",
+                    data: result
+                );
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPut(ApiEndpointConstants.User.UpdateProfileEndpoint)]
+        [Authorize(Roles = "Student, Staff")]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequest userRequest)
+        {
+            try
+            {
+                var result = await _userService.UpdateProfile(userRequest);
+                var response = ApiResponseBuilder.BuildResponse(
+                    statusCode: 200,
+                    message: "User profile updated successfully",
+                    data: result
+                );
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPut(ApiEndpointConstants.User.UpdatePasswordEndpoint)]
+        [Authorize(Roles = "Student, Staff")]
+        public async Task<IActionResult> UpdateProfile([FromBody] ChangePasswordRequest userRequest)
+        {
+            try
+            {
+                var result = await _userService.UpdatePassword(userRequest);
+                var response = ApiResponseBuilder.BuildResponse(
+                    statusCode: 200,
+                    message: "Updated user password successfully",
                     data: result
                 );
                 return Ok(response);

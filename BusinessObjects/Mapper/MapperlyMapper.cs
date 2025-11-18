@@ -24,6 +24,7 @@ namespace BusinessObjects.Mapper
     {
         // User to UserDto mapping
         [MapProperty(nameof(User.Role.Name), nameof(UserDTO.Role))]
+        [MapProperty(nameof(User.StudentTestSessions), nameof(UserDTO.StudentTestSessions))]
         public partial UserDTO UserToUserDto(User user);
 
         // User to LoginResponse mapping - only Role name
@@ -36,8 +37,10 @@ namespace BusinessObjects.Mapper
         [MapProperty(nameof(UserRequestDTO.Role), nameof(User.RoleId))]
         public partial User RequestDTOToUser(UserRequestDTO request);
      
+        public partial User UpdateProfileToUser(UpdateProfileRequest request);
 
-     
+
+
         // Lesson mappings
         [MapProperty(nameof(Lesson.Id), nameof(LessonResponse.LessonId))]
         public partial LessonResponse LessonToLessonResponse(Lesson lesson);

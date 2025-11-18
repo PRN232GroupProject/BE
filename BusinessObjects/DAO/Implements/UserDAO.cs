@@ -44,6 +44,8 @@ namespace BusinessObjects.DAO.Implements
         {
             return await _context.Users
                 .Include(u => u.Role)
+                .Include(u => u.StudentTestSessions)
+                .Where(u => u.Id == u.StudentTestSessions.Select(sts => sts.UserId).FirstOrDefault())
                 .FirstOrDefaultAsync(u => u.Id == userId);
         }
 
