@@ -42,12 +42,6 @@ namespace BusinessObjects.Mapper
         List<ResourceResponse> ResourcesToResourceResponses(List<Resource> resources);
         void UpdateResourceFromRequest(UpdateResourceRequest request, Resource resource);
 
-        //Question
-        Question CreateQuestionRequestToQuestion(CreateQuestionRequestDto request);
-        void UpdateQuestionFromRequest(UpdateQuestionRequestDto request, Question question);
-        QuestionResponseDto QuestionToQuestionResponseDto(Question question);
-        List<QuestionResponseDto> QuestionsToQuestionResponseDtos(List<Question> questions);
-
         // Test Session
         StudentTestSession CreateTestSessionRequestToTestSession(CreateTestSessionRequest request);
         TestSessionResponse TestSessionToTestSessionResponse(StudentTestSession session);
@@ -59,5 +53,18 @@ namespace BusinessObjects.Mapper
         AnswerResponse AnswerToAnswerResponse(StudentAnswer answer);
         List<AnswerResponse> AnswersToAnswerResponses(List<StudentAnswer> answers);
         void UpdateAnswerFromRequest(UpdateAnswerRequest request, StudentAnswer answer);
+
+        //Question
+        Question CreateQuestionRequestToQuestion(CreateQuestionRequestDto request);
+        void UpdateQuestionFromRequest(UpdateQuestionRequestDto request, Question question);
+        QuestionResponseDto QuestionToQuestionResponseDto(Question question);
+        List<QuestionResponseDto> QuestionsToQuestionResponseDtos(List<Question> questions);
+
+        //Test
+
+        Test CreateTestRequestToTest(CreateTestRequestDto request);
+        void UpdateTestFromRequest(UpdateTestRequestDto request, Test test);
+        TestResponseDto TestToTestResponseDto(Test test);
+        List<TestResponseDto> TestsToTestResponseDtos(List<Test> tests);
     }
 }

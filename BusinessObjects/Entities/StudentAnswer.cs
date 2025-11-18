@@ -11,7 +11,7 @@ namespace BusinessObjects.Entities
         public int Id { get; set; }
         public int SessionId { get; set; }
         public int QuestionId { get; set; }
-        public string? SelectedAnswer { get; set; } // e.g., 'B'
+        public string? SelectedAnswer { get; set; } 
         public bool IsCorrect { get; set; }
 
         public StudentTestSession Session { get; set; } = null!;
