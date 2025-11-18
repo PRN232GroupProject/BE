@@ -145,5 +145,31 @@ namespace BusinessObjects.DAO.Implements
                 throw;
             }
         }
+
+        public async Task<bool> MarkCompletedResourceAsnyc(int resourceId)
+        {
+            try
+            {
+                var resource = await GetResourceByIdAsync(resourceId);
+
+                if (resource == null)
+                {
+                    return false;
+                }
+                    
+                resource.IsCompleted = true;
+                resource.CompletedAt = DateTime.UtcNow;
+
+                await UpdateAsync(resource);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error marking resource: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                throw;
+            }
+        }
     }
 }

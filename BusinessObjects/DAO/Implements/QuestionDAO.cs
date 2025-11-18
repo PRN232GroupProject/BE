@@ -116,22 +116,22 @@ namespace BusinessObjects.DAO.Implements
             }
         }
 
-        //public async Task<bool> IsQuestionInUseAsync(int questionId)
-        //{
-        //    try
-        //    {
-               
-        //        var inUse = await _context.TestQuestions
-        //            .AsNoTracking()
-        //            .AnyAsync(tq => tq.QuestionId == questionId);
+        public async Task<bool> IsQuestionInUseAsync(int questionId)
+        {
+            try
+            {
 
-        //        return inUse;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine($"Error checking if question is in use: {ex.Message}");
-        //        throw;
-        //    }
-        //}
+                var inUse = await _context.TestQuestions
+                    .AsNoTracking()
+                    .AnyAsync(tq => tq.QuestionId == questionId);
+
+                return inUse;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error checking if question is in use: {ex.Message}");
+                throw;
+            }
+        }
     }
 }

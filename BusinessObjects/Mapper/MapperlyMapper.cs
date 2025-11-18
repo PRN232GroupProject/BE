@@ -4,6 +4,7 @@ using BusinessObjects.DTO.Chapter;
 using BusinessObjects.DTO.Lesson;
 using BusinessObjects.DTO.Question;
 using BusinessObjects.DTO.Resource;
+using BusinessObjects.DTO.Test;
 using BusinessObjects.DTO.TestSession;
 using BusinessObjects.DTO.User;
 using BusinessObjects.DTO.User.Auth;
@@ -19,7 +20,7 @@ using System.Threading.Tasks;
 namespace BusinessObjects.Mapper
 {
     [Mapper]
-    public partial class MapperlyMapper : IMapperlyMapper
+    public partial class MapperlyMapper : MapperHelperBase, IMapperlyMapper
     {
         // User to UserDto mapping
         [MapProperty(nameof(User.Role.Name), nameof(UserDTO.Role))]
@@ -34,7 +35,9 @@ namespace BusinessObjects.Mapper
 
         [MapProperty(nameof(UserRequestDTO.Role), nameof(User.RoleId))]
         public partial User RequestDTOToUser(UserRequestDTO request);
+     
 
+     
         // Lesson mappings
         [MapProperty(nameof(Lesson.Id), nameof(LessonResponse.LessonId))]
         public partial LessonResponse LessonToLessonResponse(Lesson lesson);
@@ -46,9 +49,9 @@ namespace BusinessObjects.Mapper
         [MapperIgnoreTarget(nameof(Lesson.Resources))]
         [MapperIgnoreTarget(nameof(Lesson.Questions))]
         public partial void UpdateLessonFromRequest(UpdateLessonRequest request, Lesson lesson);
+      
 
         // Chapter mappings
-
         [MapProperty(nameof(CreateChapterRequest.ChapterName), nameof(Chapter.Name))]
         public partial Chapter CreateChapterRequestToChapter(CreateChapterRequest request);
         [MapProperty(nameof(Chapter.Name), nameof(ChapterResponse.ChapterName))]
@@ -58,11 +61,10 @@ namespace BusinessObjects.Mapper
         public partial List<ChapterResponse> ChaptersToChapterResponses(List<Chapter> chapters);
 
         // Update mapping - map only the fields that should be updated
-
         [MapProperty(nameof(UpdateChapterRequest.ChapterName), nameof(Chapter.Name))]
         [MapperIgnoreTarget(nameof(Chapter.Lessons))]
         public partial void UpdateChapterFromRequest(UpdateChapterRequest request, Chapter chapter);
-
+     
 
         // Resource mappings
         [MapProperty(nameof(CreateResourceRequest.ResourceTitle), nameof(Resource.Title))]
@@ -70,7 +72,6 @@ namespace BusinessObjects.Mapper
         [MapProperty(nameof(CreateResourceRequest.ResourceUrl), nameof(Resource.Url))]
         [MapProperty(nameof(CreateResourceRequest.ResourceDescription), nameof(Resource.Description))]
         public partial Resource CreateResourceRequestToResource(CreateResourceRequest request);
-
 
         [MapProperty(nameof(Resource.Id), nameof(ResourceResponse.ResourceId))]
         [MapProperty(nameof(Resource.LessonId), nameof(ResourceResponse.LessonId))]
@@ -81,64 +82,56 @@ namespace BusinessObjects.Mapper
         public partial ResourceResponse ResourceToResourceResponse(Resource resource);
         public partial List<ResourceResponse> ResourcesToResourceResponses(List<Resource> resources);
 
-
         [MapProperty(nameof(UpdateResourceRequest.ResourceTitle), nameof(Resource.Title))]
         [MapProperty(nameof(UpdateResourceRequest.ResourceType), nameof(Resource.Type))]
         [MapProperty(nameof(UpdateResourceRequest.ResourceUrl), nameof(Resource.Url))]
         [MapProperty(nameof(UpdateResourceRequest.ResourceDescription), nameof(Resource.Description))]
         public partial void UpdateResourceFromRequest(UpdateResourceRequest request, Resource resource);
+     
 
-
+   
         // Question mappings
-
         [MapperIgnoreTarget(nameof(Question.CreatedAt))]
         [MapperIgnoreTarget(nameof(Question.CreatedBy))]
         [MapperIgnoreTarget(nameof(Question.Lesson))]
         [MapperIgnoreTarget(nameof(Question.CreatedById))]
         public partial Question CreateQuestionRequestToQuestion(CreateQuestionRequestDto request);
 
-
         [MapperIgnoreTarget(nameof(Question.CreatedAt))]
         [MapperIgnoreTarget(nameof(Question.CreatedBy))]
         [MapperIgnoreTarget(nameof(Question.Lesson))]
         [MapperIgnoreTarget(nameof(Question.CreatedById))]
-
         public partial void UpdateQuestionFromRequest(UpdateQuestionRequestDto request, Question question);
+
         public partial QuestionResponseDto QuestionToQuestionResponseDto(Question question);
-        public partial List<QuestionResponseDto> QuestionsToQuestionResponseDtos(List<Question> questions);
-        protected string MapOptionsToString(Dictionary<string, string> options)
-        {
-            if (options == null || options.Count == 0)
-            {
-                return "{}";
-            }
-            return JsonSerializer.Serialize(options);
-        }
+        public override partial List<QuestionResponseDto> QuestionsToQuestionResponseDtos(List<Question> questions);
 
-        protected Dictionary<string, string> MapOptionsToDictionary(string optionsJson)
-        {
-            if (string.IsNullOrEmpty(optionsJson))
-            {
-                return new Dictionary<string, string>();
-            }
-            try
-            {
-                var jsonOptions = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                };
-                return JsonSerializer.Deserialize<Dictionary<string, string>>(optionsJson, jsonOptions)
-                       ?? new Dictionary<string, string>();
-            }
-            catch (JsonException ex)
-            {
-                Console.WriteLine($"Error deserializing Options JSON: {ex.Message}");
-                return new Dictionary<string, string>();
-            }
-        }
+        //Test mappings
+        [MapperIgnoreTarget(nameof(Test.CreatedAt))]
+        [MapperIgnoreTarget(nameof(Test.CreatedBy))]
+        [MapperIgnoreTarget(nameof(Test.StudentTestSessions))]
+        [MapperIgnoreTarget(nameof(Test.TestQuestions))]
+        [MapperIgnoreTarget(nameof(Test.CreatedById))]
+        public partial Test CreateTestRequestToTest(CreateTestRequestDto request);
 
+        [MapperIgnoreTarget(nameof(Test.CreatedAt))]
+        [MapperIgnoreTarget(nameof(Test.CreatedBy))]
+        [MapperIgnoreTarget(nameof(Test.StudentTestSessions))]
+        [MapperIgnoreTarget(nameof(Test.TestQuestions))]
+        [MapperIgnoreTarget(nameof(Test.CreatedById))]
+        public partial void UpdateTestFromRequest(UpdateTestRequestDto request, Test test);
 
-        // Test Session mappings
+        [MapperIgnoreTarget(nameof(TestResponseDto.Questions))]
+        public partial List<TestResponseDto> TestsToTestResponseDtos(List<Test> tests);
+
+        [MapProperty(nameof(Test.TestQuestions), nameof(TestResponseDto.Questions))]
+        [MapProperty(nameof(Test.CreatedById), nameof(TestResponseDto.CreatedBy))]
+        public partial TestResponseDto TestToTestResponseDto(Test test);
+       
+
+        [MapperIgnoreTarget(nameof(StudentTestSession.User))]
+        [MapperIgnoreTarget(nameof(StudentTestSession.Test))]
+        [MapperIgnoreTarget(nameof(StudentTestSession.StudentAnswers))]
         [MapProperty(nameof(CreateTestSessionRequest.UserId), nameof(StudentTestSession.UserId))]
         [MapProperty(nameof(CreateTestSessionRequest.TestId), nameof(StudentTestSession.TestId))]
         [MapProperty(nameof(CreateTestSessionRequest.StartTime), nameof(StudentTestSession.StartTime))]
@@ -157,6 +150,9 @@ namespace BusinessObjects.Mapper
         public partial TestSessionResponse TestSessionToTestSessionResponse(StudentTestSession session);
         public partial List<TestSessionResponse> TestSessionsToTestSessionResponses(List<StudentTestSession> sessions);
 
+        [MapperIgnoreTarget(nameof(StudentTestSession.User))]
+        [MapperIgnoreTarget(nameof(StudentTestSession.Test))]
+        [MapperIgnoreTarget(nameof(StudentTestSession.StudentAnswers))]
         [MapProperty(nameof(UpdateTestSessionRequest.Id), nameof(StudentTestSession.Id))]
         [MapProperty(nameof(UpdateTestSessionRequest.UserId), nameof(StudentTestSession.UserId))]
         [MapProperty(nameof(UpdateTestSessionRequest.TestId), nameof(StudentTestSession.TestId))]
@@ -165,8 +161,8 @@ namespace BusinessObjects.Mapper
         [MapProperty(nameof(UpdateTestSessionRequest.Score), nameof(StudentTestSession.Score))]
         [MapProperty(nameof(UpdateTestSessionRequest.Status), nameof(StudentTestSession.Status))]
         public partial void UpdateTestSessionFromRequest(UpdateTestSessionRequest request, StudentTestSession session);
-
-        // Answer mappings
+        [MapperIgnoreTarget(nameof(StudentAnswer.Question))]
+        [MapperIgnoreTarget(nameof(StudentAnswer.Session))]
         [MapProperty(nameof(CreateAnswerRequest.SessionId), nameof(StudentAnswer.SessionId))]
         [MapProperty(nameof(CreateAnswerRequest.QuestionId), nameof(StudentAnswer.QuestionId))]
         [MapProperty(nameof(CreateAnswerRequest.SelectedAnswer), nameof(StudentAnswer.SelectedAnswer))]
@@ -179,10 +175,13 @@ namespace BusinessObjects.Mapper
         public partial AnswerResponse AnswerToAnswerResponse(StudentAnswer answer);
         public partial List<AnswerResponse> AnswersToAnswerResponses(List<StudentAnswer> answers);
 
+        [MapperIgnoreTarget(nameof(StudentAnswer.Question))]
+        [MapperIgnoreTarget(nameof(StudentAnswer.Session))] // Corrected property name
         [MapProperty(nameof(UpdateAnswerRequest.Id), nameof(StudentAnswer.Id))]
         [MapProperty(nameof(UpdateAnswerRequest.SessionId), nameof(StudentAnswer.SessionId))]
         [MapProperty(nameof(UpdateAnswerRequest.QuestionId), nameof(StudentAnswer.QuestionId))]
         [MapProperty(nameof(UpdateAnswerRequest.SelectedAnswer), nameof(StudentAnswer.SelectedAnswer))]
         public partial void UpdateAnswerFromRequest(UpdateAnswerRequest request, StudentAnswer answer);
+       
     }
 }

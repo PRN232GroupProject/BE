@@ -127,6 +127,29 @@ namespace Service.Implements
             }
         }
 
+        public async Task<bool> MarkCompletedResourceAsync(int resourceId)
+        {
+            try
+            {
+                var resource = await _resourceRepository.GetResourceByIdAsync(resourceId);
+
+                if (resource == null)
+                {
+                    return false;
+                }
+
+                await _resourceRepository.MarkCompletedResourceAsnyc(resourceId);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in MarkCompletedResourceAsync: {ex.Message}");
+                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+                throw;
+            }
+        }
+
         public async Task<ResourceResponse> UpdateResourceAsync(UpdateResourceRequest request)
         {
             try

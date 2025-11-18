@@ -14,5 +14,7 @@ namespace BusinessObjects.DTO.Lesson
         public string? Content { get; set; }
         public int? CreatedById { get; set; }
         public DateTime CreatedAt { get; set; }
+        public string ResourceName { get; set; } = string.Empty;
+
     }
 }

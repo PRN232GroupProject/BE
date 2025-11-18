@@ -1,4 +1,5 @@
-﻿using BusinessObjects.DAO.Interfaces;
+﻿using BusinessObjects.DAO.Implements;
+using BusinessObjects.DAO.Interfaces;
 using BusinessObjects.Entities;
 using Repository.Interfaces;
 using System;
@@ -41,6 +42,10 @@ namespace Repository.Implements
         public async Task<bool> DeleteQuestionAsync(int questionId)
         {
             return await _questionDao.DeleteQuestionAsync(questionId);
+        }
+        public async Task<bool> IsQuestionInUseAsync(int questionId)
+        {
+            return await _questionDao.IsQuestionInUseAsync(questionId);
         }
     }
 }

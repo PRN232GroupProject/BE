@@ -15,5 +15,6 @@ namespace Service.Interfaces
         Task<ResourceResponse> CreateResourceAsync(CreateResourceRequest request);
         Task<ResourceResponse> UpdateResourceAsync(UpdateResourceRequest request);
         Task<bool> DeleteResourceAsync(int resourceId);
+        Task<bool> MarkCompletedResourceAsync(int resourceId);
     }
 }

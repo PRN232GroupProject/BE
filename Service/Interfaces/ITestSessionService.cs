@@ -15,5 +15,6 @@ namespace Service.Interfaces
         Task<TestSessionResponse?> CreateTestSessionAsync(CreateTestSessionRequest session);
         Task<TestSessionResponse> UpdateTestSessionAsync(UpdateTestSessionRequest session);
         Task<bool> DeleteTestSessionAsync(int sessionId);
+        Task<List<TestSessionResponse>> GetSessionsByUserAsync(int userId, int testId);
     }
 }
