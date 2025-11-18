@@ -86,6 +86,63 @@ namespace ChemistryProjectPrep.API.Controllers
             }
         }
 
+        [HttpGet("{id}/answers")]
+        public async Task<ActionResult<ApiResponse<StudentTestSessionResponse>>> GetStudentAnswers(int id)
+        {
+            try
+            {
+                var studentAnswers = await _sessionService.GetStudentAnswersFromSessionIdAsync(id);
+                if (studentAnswers == null)
+                {
+                    var notFoundResponse = ApiResponseBuilder.BuildResponse<StudentTestSessionResponse?>(
+                        404,
+                        "Student answers not found.",
+                        null
+                    );
+                    return NotFound(notFoundResponse);
+                }
+                var response = ApiResponseBuilder.BuildResponse(
+                    200,
+                    "Student answers retrieved successfully.",
+                    studentAnswers
+                );
+                return Ok(response);
+            }
+
+            catch (ArgumentException argEx)
+            {
+                _logger.LogWarning(argEx, $"Validation error getting student answers for session ID {id}");
+                var response = ApiResponseBuilder.BuildResponse<TestSessionResponse>(
+                    400,
+                    $"Bad request: {argEx.Message}",
+                    null
+                );
+                return BadRequest(response);
+            }
+
+            catch (InvalidOperationException invOpEx)
+            {
+                _logger.LogWarning(invOpEx, $"Conflict error getting student answers for session ID {id}.");
+                var response = ApiResponseBuilder.BuildResponse<TestSessionResponse>(
+                    409,
+                    $"Conflict: {invOpEx.Message}",
+                    null
+                );
+                return Conflict(response);
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error getting student answers for session ID {id}");
+                var response = ApiResponseBuilder.BuildResponse<TestSessionResponse?>(
+                    500,
+                    $"Internal server error: {ex.Message}",
+                    null
+                );
+                return StatusCode(500, response);
+            }
+        }
+
         [HttpPost]
         public async Task<ActionResult<ApiResponse<TestSessionResponse>>> CreateTestSession([FromBody] CreateTestSessionRequest request)
         {

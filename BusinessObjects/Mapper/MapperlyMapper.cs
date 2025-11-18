@@ -147,6 +147,7 @@ namespace BusinessObjects.Mapper
         [MapProperty(nameof(StudentTestSession.EndTime), nameof(TestSessionResponse.EndTime))]
         [MapProperty(nameof(StudentTestSession.Score), nameof(TestSessionResponse.Score))]
         [MapProperty(nameof(StudentTestSession.Status), nameof(TestSessionResponse.Status))]
+        [MapProperty(nameof(StudentTestSession.StudentAnswers), nameof(TestSessionResponse.StudentAnswers))]
         public partial TestSessionResponse TestSessionToTestSessionResponse(StudentTestSession session);
         public partial List<TestSessionResponse> TestSessionsToTestSessionResponses(List<StudentTestSession> sessions);
 
