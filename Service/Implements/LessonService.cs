@@ -20,6 +20,11 @@ namespace Service.Implements
             _lessonRepo = lessonRepo;
             _mapper = mapper;
         }
+        public async Task<List<LessonResponse>> GetAllAsync()
+        {
+            var lessons = await _lessonRepo.GetAllAsync();
+            return _mapper.LessonsToLessonResponses(lessons);
+        }
         public async Task<LessonResponse?> GetLessonByIdAsync(int id)
         {
             var lesson = await _lessonRepo.GetLessonByIdAsync(id);
