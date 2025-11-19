@@ -38,6 +38,7 @@
             public const string DeleteTestEndpoint = TestEndpoint + "/{id}";
             public const string AddQuestionsToTestEndpoint = TestEndpoint + "/{id}/questions";
             public const string RemoveQuestionFromTestEndpoint = TestEndpoint + "/{id}/questions/{questionId}";
+            public const string GetTestsCreatedByMeEndpoint = TestEndpoint + "/created-by-me";
         }
     }
 }

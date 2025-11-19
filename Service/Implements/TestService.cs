@@ -137,5 +137,27 @@ namespace Service.Implements
                 throw;
             }
         }
+        public async Task<List<TestResponseDto>> GetTestsCreatedByMeAsync()
+        {
+            try
+            {
+                var userIdClaim = _httpContextAccessor.HttpContext?.User.Claims
+                    .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+                if (!int.TryParse(userIdClaim, out int userId))
+                {
+                    throw new UnauthorizedAccessException("User is not authenticated.");
+                }
+
+                var tests = await _testRepository.GetTestsByCreatorIdAsync(userId);
+
+                return _mapper.TestsToTestResponseDtos(tests);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetTestsCreatedByMeAsync: {ex.Message}");
+                throw;
+            }
+        }
     }
 }

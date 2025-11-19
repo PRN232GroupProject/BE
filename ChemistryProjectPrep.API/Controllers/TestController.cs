@@ -24,7 +24,7 @@ namespace ChemistryProjectPrep.API.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous] 
+        [Authorize] 
         public async Task<ActionResult<ApiResponse<List<TestResponseDto>>>> GetAllTests()
         {
             try
@@ -44,7 +44,7 @@ namespace ChemistryProjectPrep.API.Controllers
         }
 
         [HttpGet("{id}")]
-        [AllowAnonymous] 
+        [Authorize] 
         public async Task<ActionResult<ApiResponse<TestResponseDto>>> GetTestById(int id)
         {
             try
@@ -214,6 +214,35 @@ namespace ChemistryProjectPrep.API.Controllers
             {
                 _logger.LogError(ex, $"Error removing question {questionId} from test {id}");
                 return StatusCode(500, ApiResponseBuilder.BuildResponse<object>(500, $"Internal server error: {ex.Message}", null));
+            }
+        }
+        [HttpGet("created-by-me")] 
+        [Authorize(Roles = "Admin,Staff")] 
+        public async Task<ActionResult<ApiResponse<List<TestResponseDto>>>> GetTestsCreatedByMe()
+        {
+            try
+            {
+                
+                var tests = await _testService.GetTestsCreatedByMeAsync();
+
+                return Ok(ApiResponseBuilder.BuildResponse(
+                    200,
+                    "My tests retrieved successfully.",
+                    tests
+                ));
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ApiResponseBuilder.BuildResponse<List<TestResponseDto>>(
+                    401, ex.Message, null
+                ));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting my tests");
+                return StatusCode(500, ApiResponseBuilder.BuildResponse<List<TestResponseDto>>(
+                    500, $"Internal server error: {ex.Message}", null
+                ));
             }
         }
     }

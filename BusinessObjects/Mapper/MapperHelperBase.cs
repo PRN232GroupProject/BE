@@ -58,6 +58,10 @@ namespace BusinessObjects.Mapper
            
             return QuestionsToQuestionResponseDtos(questions);
         }
+        protected int GetQuestionCount(ICollection<TestQuestion> testQuestions)
+        {
+            return testQuestions?.Count ?? 0;
+        }
         public abstract List<QuestionResponseDto> QuestionsToQuestionResponseDtos(List<Question> questions);
     }
 }

@@ -55,7 +55,7 @@ namespace ChemistryProjectPrep.API.Controllers
 
       
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin,Staff")]
+        [Authorize]
         public async Task<ActionResult<ApiResponse<QuestionResponseDto>>> GetQuestionById(int id)
         {
             try
