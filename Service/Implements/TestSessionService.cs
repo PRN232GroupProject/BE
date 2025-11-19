@@ -186,24 +186,5 @@ namespace Service.Implements
                 throw;
             }
         }
-
-        public async Task<TestSessionResponse?> GetStudentAnswersFromSessionIdAsync(int sessionId)
-        {
-            try
-            {
-                var session = await _sessionRepository.GetStudentAnswersFromSessionIdAsync(sessionId);
-                if (session == null)
-                {
-                    throw new KeyNotFoundException($"No session found with ID: {sessionId}");
-                }
-                return _mapper.TestSessionToTestSessionResponse(session);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error retrieving session with student answers: {ex.Message}");
-                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
-                throw;
-            }
-        }
     }
 }
