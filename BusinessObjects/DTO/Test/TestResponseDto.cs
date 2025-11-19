@@ -16,6 +16,7 @@ namespace BusinessObjects.DTO.Test
         public int DurationMinutes { get; set; }
         public DateTime CreatedAt { get; set; }
         public int CreatedBy { get; set; }
+        public int TotalQuestions { get; set; }
         public List<QuestionResponseDto> Questions { get; set; }
 
         public TestResponseDto()

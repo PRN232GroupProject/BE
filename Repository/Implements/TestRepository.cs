@@ -47,5 +47,9 @@ namespace Repository.Implements
         {
             return await _testDao.IsTestInUseAsync(testId);
         }
+        public async Task<List<Test>> GetTestsByCreatorIdAsync(int creatorId)
+        {
+            return await _testDao.GetTestsByCreatorIdAsync(creatorId);
+        }
     }
 }

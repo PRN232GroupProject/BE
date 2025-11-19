@@ -122,14 +122,6 @@ namespace Service.Implements
 
                 Console.WriteLine($"Found existing session ID: {existingSession.Id}");
 
-                // Check if another session with same id exists
-                var exists = await _sessionRepository.CheckExistingTestSessionAsync(request.Id);
-
-                if (exists)
-                {
-                    throw new ArgumentException($"Another session with ID '{request.Id}' already exists.");
-                }
-
                 // Update properties manually to avoid tracking issues
                 existingSession.TestId = request.TestId;
                 existingSession.StartTime = request.StartTime;

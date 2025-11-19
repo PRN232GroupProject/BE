@@ -130,8 +130,10 @@ namespace BusinessObjects.Mapper
 
         [MapProperty(nameof(Test.TestQuestions), nameof(TestResponseDto.Questions))]
         [MapProperty(nameof(Test.CreatedById), nameof(TestResponseDto.CreatedBy))]
+        [MapProperty(nameof(Test.TestQuestions), nameof(TestResponseDto.TotalQuestions))]
         public partial TestResponseDto TestToTestResponseDto(Test test);
-       
+
+        // TestSession mappings
 
         [MapperIgnoreTarget(nameof(StudentTestSession.User))]
         [MapperIgnoreTarget(nameof(StudentTestSession.Test))]
