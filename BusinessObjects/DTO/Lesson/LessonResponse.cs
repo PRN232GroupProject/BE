@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BusinessObjects.DTO.Resource;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ namespace BusinessObjects.DTO.Lesson
         public int? CreatedById { get; set; }
         public DateTime CreatedAt { get; set; }
         public string ResourceName { get; set; } = string.Empty;
+        public List<ResourceResponse> Resources { get; set; } = new List<ResourceResponse>();
 
     }
 }
