@@ -101,7 +101,7 @@ namespace Service.Implements
                 // Set default values
                 newUser.CreatedAt = DateTime.UtcNow;
                 newUser.IsActive = true;
-                newUser.RoleId = 2; // Assuming 1 is the default role (e.g., "User" role)
+                newUser.RoleId = 3; // Assuming 1 is the default role (e.g., "User" role)
 
                 // Save to database - returns bool
                 var isCreated = await _userRepository.CreateUserAsync(newUser);
@@ -157,7 +157,7 @@ namespace Service.Implements
             return BCrypt.Net.BCrypt.HashPassword(password, workFactor: 12);
         }
 
-        public static bool VerifyPassword(string password, string hashedPassword)
+        public bool VerifyPassword(string password, string hashedPassword)
         {
             try
             {
@@ -169,7 +169,7 @@ namespace Service.Implements
             }
         }
 
-        public static bool IsBCryptHash(string password)
+        public bool IsBCryptHash(string password)
         {
             // BCrypt hashes start with $2a$, $2b$, $2y$, or $2x$ followed by cost
             return password != null &&

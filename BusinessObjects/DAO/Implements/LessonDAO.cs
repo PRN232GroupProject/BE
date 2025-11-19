@@ -25,6 +25,7 @@ namespace BusinessObjects.DAO.Implements
             return await _context.Lessons
                 .AsNoTracking()
                 .Include(l => l.Chapter)
+                .Include(l => l.Resources)
                 .Include(l => l.CreatedBy)
                 .ToListAsync();
         }
@@ -35,6 +36,7 @@ namespace BusinessObjects.DAO.Implements
             return await _context.Lessons
                 .AsNoTracking()
                 .Include(l => l.Chapter)
+                .Include(l => l.Resources)
                 .Include(l => l.CreatedBy)
                 .FirstOrDefaultAsync(l => l.Id == id);
         }

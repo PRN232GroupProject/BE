@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BusinessObjects.DTO.Test;
+using BusinessObjects.DTO.TestSession;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +16,6 @@ namespace BusinessObjects.DTO.User
         public string Email { get; set; } = string.Empty;
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
+        public List<TestSessionResponse> StudentTestSessions { get; set; } = new List<TestSessionResponse>();
     }
 }
