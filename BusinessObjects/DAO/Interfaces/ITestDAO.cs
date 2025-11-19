@@ -18,5 +18,6 @@ namespace BusinessObjects.DAO.Interfaces
         Task<bool> DeleteTestAsync(int testId);
 
         Task<bool> IsTestInUseAsync(int testId);
+        Task<List<Test>> GetTestsByCreatorIdAsync(int creatorId);
     }
 }

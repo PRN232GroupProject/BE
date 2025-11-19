@@ -15,5 +15,6 @@ namespace Service.Interfaces
 
         Task<TestResponseDto> UpdateTestAsync(UpdateTestRequestDto request);
         Task<bool> DeleteTestAsync(int testId);
+        Task<List<TestResponseDto>> GetTestsCreatedByMeAsync();
     }
 }

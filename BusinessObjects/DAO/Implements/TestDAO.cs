@@ -55,6 +55,7 @@ namespace BusinessObjects.DAO.Implements
             try
             {
                 return await _context.Tests
+                    .Include(t => t.TestQuestions)
                     .AsNoTracking()
                     .OrderByDescending(t => t.CreatedAt)
                     .ToListAsync();
@@ -121,6 +122,23 @@ namespace BusinessObjects.DAO.Implements
             catch (Exception ex)
             {
                 Console.WriteLine($"Error checking if test is in use: {ex.Message}");
+                throw;
+            }
+        }
+        public async Task<List<Test>> GetTestsByCreatorIdAsync(int creatorId)
+        {
+            try
+            {
+                return await _context.Tests
+                    .Where(t => t.CreatedById == creatorId) 
+                    .Include(t => t.TestQuestions) 
+                    .AsNoTracking()
+                    .OrderByDescending(t => t.CreatedAt)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting tests by creator: {ex.Message}");
                 throw;
             }
         }

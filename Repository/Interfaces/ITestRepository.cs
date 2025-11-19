@@ -15,5 +15,6 @@ namespace Repository.Interfaces
         Task<bool> UpdateTestAsync(Test test);
         Task<bool> DeleteTestAsync(int testId);
         Task<bool> IsTestInUseAsync(int testId);
+        Task<List<Test>> GetTestsByCreatorIdAsync(int creatorId);
     }
 }
