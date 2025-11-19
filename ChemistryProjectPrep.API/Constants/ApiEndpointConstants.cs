@@ -28,6 +28,8 @@
             public const string CreateUserEndpoint = UserEndpoint;
             public const string UpdateUserEndpoint = UserEndpoint;
             public const string DeleteUserEndpoint = UserEndpoint;
+            public const string UpdateProfileEndpoint = UserEndpoint + "/profile";
+            public const string UpdatePasswordEndpoint = UserEndpoint + "/change-password";
         }
         public static class Test
         {

@@ -93,6 +93,11 @@ namespace Service.Implements
             {
                 var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
+                if (string.IsNullOrEmpty(userIdClaim))
+                {
+                    throw new UnauthorizedAccessException("User is not authenticated");
+                }
+
                 var profile = await _userRepository.GetUserByIdAsync(int.Parse(userIdClaim));
 
                 var dto = _mapper.UserToUserDto(profile);
@@ -111,6 +116,55 @@ namespace Service.Implements
                 var user = await _userRepository.GetUserByIdAsync(userId);
 
                 return _mapper.UserToUserDto(user);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> UpdatePassword(ChangePasswordRequest request)
+        {
+            try
+            {
+                var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var existingUser = await _userRepository.GetUserByIdAsync(int.Parse(userId));
+
+                if (existingUser == null)
+                {
+                    throw new Exception("User does not exist.");
+                }
+
+                if (!_authService.VerifyPassword(request.CurrentPassword, existingUser.PasswordHash))
+                {
+                    throw new Exception("Current password is incorrect.");
+                }
+
+                var hashPassword = _authService.HashPassword(request.NewPassword);  
+                existingUser.PasswordHash = hashPassword;
+                return await _userRepository.UpdateUserAsync(existingUser);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> UpdateProfile(UpdateProfileRequest request)
+        {
+            try
+            {
+                var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var existingUser = await _userRepository.GetUserByIdAsync(int.Parse(userId));
+
+                if (existingUser == null)
+                {
+                    throw new Exception("User does not exist.");
+                }
+
+                var user = _mapper.UpdateProfileToUser(request);
+
+                return await _userRepository.UpdateUserAsync(user);
             }
             catch (Exception ex)
             {

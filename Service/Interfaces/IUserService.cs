@@ -16,5 +16,7 @@ namespace Service.Interfaces
         Task<bool> CreateUser(UserRequestDTO userRequest);
         Task<bool> UpdateUser(int userId, UserRequestDTO userRequest);
         Task<bool> DeleteUser(int userId);
+        Task<bool> UpdateProfile(UpdateProfileRequest request);
+        Task<bool> UpdatePassword(ChangePasswordRequest request);
     }
 }

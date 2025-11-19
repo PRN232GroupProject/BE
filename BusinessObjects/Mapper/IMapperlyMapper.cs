@@ -24,6 +24,7 @@ namespace BusinessObjects.Mapper
         LoginResponse UserToLoginResponse(User user);
         User RegisterRequestToUser(RegisterRequest request);
         User RequestDTOToUser(UserRequestDTO request);
+        User UpdateProfileToUser(UpdateProfileRequest request);
 
         // Chapter
         Chapter CreateChapterRequestToChapter(CreateChapterRequest request);
