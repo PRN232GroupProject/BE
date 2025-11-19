@@ -25,6 +25,7 @@ namespace BusinessObjects.Mapper
         // User to UserDto mapping
         [MapProperty(nameof(User.Role.Name), nameof(UserDTO.Role))]
         [MapProperty(nameof(User.StudentTestSessions), nameof(UserDTO.StudentTestSessions))]
+        [MapProperty(nameof(User.Id), nameof(UserDTO.Id))]
         public partial UserDTO UserToUserDto(User user);
 
         // User to LoginResponse mapping - only Role name
