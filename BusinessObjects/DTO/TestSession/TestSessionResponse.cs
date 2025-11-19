@@ -1,4 +1,5 @@
-﻿using BusinessObjects.Entities;
+﻿using BusinessObjects.DTO.Answer;
+using BusinessObjects.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,6 @@ namespace BusinessObjects.DTO.TestSession
         public DateTime? EndTime { get; set; }
         public float? Score { get; set; }
         public string Status { get; set; } = string.Empty; // 'in_progress', 'completed'
-        public List<StudentAnswer> StudentAnswers { get; set; }
+        public List<AnswerResponse> StudentAnswers { get; set; }
     }
 }

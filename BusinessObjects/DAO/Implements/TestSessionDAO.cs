@@ -102,13 +102,6 @@ namespace BusinessObjects.DAO.Implements
                     return false;
                 }
 
-                var exists = await CheckExistingTestSessionAsync(session.Id);
-                if (exists)
-                {
-                    Console.WriteLine("Test session already exists.");
-                    return false;
-                }
-
                 var existingSession = _context.StudentTestSessions.Local.FirstOrDefault(s => s.Id == session.Id);
                 if (existingSession != null)
                 {
