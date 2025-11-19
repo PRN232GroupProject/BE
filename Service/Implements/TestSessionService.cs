@@ -6,7 +6,7 @@ using Repository.Interfaces;
 using Service.Interfaces;
 
 namespace Service.Implements
-{   
+{
     public class TestSessionService : ITestSessionService
     {
         private readonly ITestSessionRepository _sessionRepository;
@@ -159,7 +159,7 @@ namespace Service.Implements
                 throw;
             }
         }
-        
+
         public async Task<List<TestSessionResponse>> GetSessionsByUserAsync(int userId, int testId)
         {
             try
@@ -171,6 +171,25 @@ namespace Service.Implements
             catch (Exception ex)
             {
                 Console.WriteLine($"Error in UpdateTestSessionAsync: {ex.Message}");
+                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        public async Task<TestSessionResponse?> GetStudentAnswersFromSessionIdAsync(int sessionId)
+        {
+            try
+            {
+                var session = await _sessionRepository.GetStudentAnswersFromSessionIdAsync(sessionId);
+                if (session == null)
+                {
+                    throw new KeyNotFoundException($"No session found with ID: {sessionId}");
+                }
+                return _mapper.TestSessionToTestSessionResponse(session);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving session with student answers: {ex.Message}");
                 Console.WriteLine($"Stack Trace: {ex.StackTrace}");
                 throw;
             }

@@ -12,6 +12,7 @@ namespace Service.Interfaces
     {
         Task<List<TestSessionResponse>> GetAllTestSessionsAsync();
         Task<TestSessionResponse?> GetTestSessionByIdAsync(int sessionId);
+        Task<TestSessionResponse?> GetStudentAnswersFromSessionIdAsync(int sessionId);
         Task<TestSessionResponse?> CreateTestSessionAsync(CreateTestSessionRequest session);
         Task<TestSessionResponse> UpdateTestSessionAsync(UpdateTestSessionRequest session);
         Task<bool> DeleteTestSessionAsync(int sessionId);

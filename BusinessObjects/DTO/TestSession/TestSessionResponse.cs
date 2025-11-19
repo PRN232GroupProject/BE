@@ -16,5 +16,6 @@ namespace BusinessObjects.DTO.TestSession
         public DateTime? EndTime { get; set; }
         public float? Score { get; set; }
         public string Status { get; set; } = string.Empty; // 'in_progress', 'completed'
+        public List<StudentAnswer> StudentAnswers { get; set; }
     }
 }

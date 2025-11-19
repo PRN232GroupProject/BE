@@ -1,4 +1,5 @@
 ﻿using BusinessObjects.DTO.Lesson;
+using BusinessObjects.Entities;
 using BusinessObjects.Metadata;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -17,7 +18,15 @@ namespace ChemistryProjectPrep.API.Controllers
         {
             _lessonService = lessonService;
         }
-
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAll()
+        {
+            var lessons = await _lessonService.GetAllAsync();
+            if (lessons == null)
+                return NotFound(ApiResponseBuilder.BuildResponse<object>(404, "Lesson list not found", null));
+            return Ok(ApiResponseBuilder.BuildResponse(200, "Success", lessons));
+        }
         [HttpGet("{id}")]
         [AllowAnonymous]
         public async Task<IActionResult> Get(int id)

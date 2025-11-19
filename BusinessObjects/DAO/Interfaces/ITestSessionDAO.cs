@@ -12,6 +12,7 @@ namespace BusinessObjects.DAO.Interfaces
     {
         Task<List<StudentTestSession>> GetAllTestSessionsAsync();
         Task<StudentTestSession?> GetTestSessionByIdAsync(int sessionId);
+        Task<StudentTestSession?> GetStudentAnswersFromSessionIdAsync(int sessionId);
         Task<StudentTestSession?> CreateTestSessionAsync(StudentTestSession session);
         Task<bool> UpdateTestSessionAsync(StudentTestSession session);
         Task<bool> DeleteTestSessionAsync(int sessionId);

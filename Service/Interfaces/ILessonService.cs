@@ -9,6 +9,7 @@ namespace Service.Interfaces
 {
     public interface ILessonService
     {
+        Task<List<LessonResponse>> GetAllAsync();
         Task<LessonResponse?> GetLessonByIdAsync(int id);
         Task<List<LessonResponse>> GetLessonsByChapterAsync(int chapterId);
         Task<LessonResponse> CreateLessonAsync(CreateLessonRequest request);

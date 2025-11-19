@@ -70,7 +70,7 @@ namespace BusinessObjects.Mapper
         public partial void UpdateChapterFromRequest(UpdateChapterRequest request, Chapter chapter);
      
 
-        //Resource mappings
+        // Resource mappings
         [MapProperty(nameof(CreateResourceRequest.ResourceTitle), nameof(Resource.Title))]
         [MapProperty(nameof(CreateResourceRequest.ResourceType), nameof(Resource.Type))]
         [MapProperty(nameof(CreateResourceRequest.ResourceUrl), nameof(Resource.Url))]
@@ -151,6 +151,7 @@ namespace BusinessObjects.Mapper
         [MapProperty(nameof(StudentTestSession.EndTime), nameof(TestSessionResponse.EndTime))]
         [MapProperty(nameof(StudentTestSession.Score), nameof(TestSessionResponse.Score))]
         [MapProperty(nameof(StudentTestSession.Status), nameof(TestSessionResponse.Status))]
+        [MapProperty(nameof(StudentTestSession.StudentAnswers), nameof(TestSessionResponse.StudentAnswers))]
         public partial TestSessionResponse TestSessionToTestSessionResponse(StudentTestSession session);
         public partial List<TestSessionResponse> TestSessionsToTestSessionResponses(List<StudentTestSession> sessions);
 
