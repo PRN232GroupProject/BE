@@ -1,4 +1,5 @@
-﻿using BusinessObjects.Entities;
+﻿using BusinessObjects.DTO.TestSession;
+using BusinessObjects.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace Repository.Interfaces
     {
         Task<List<StudentTestSession>> GetAllTestSessionsAsync();
         Task<StudentTestSession?> GetTestSessionByIdAsync(int sessionId);
+        Task<StudentTestSession?> GetStudentAnswersFromSessionIdAsync(int sessionId);
         Task<StudentTestSession?> CreateTestSessionAsync(StudentTestSession session);
         Task<bool> UpdateTestSessionAsync(StudentTestSession session);
         Task<bool> DeleteTestSessionAsync(int sessionId);

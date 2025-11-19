@@ -55,6 +55,7 @@ namespace ChemistryProjectPrep.API.Configurations
             services.AddScoped<IQuestionService, QuestionService>();    
             services.AddScoped<ITestService, TestService>();
             services.AddScoped<ITestQuestionService, TestQuestionService>();
+            services.AddScoped<ITestSessionService, TestSessionService>();
 
             // Custom Services
             services.AddScoped<ICloudinaryService, CloudinaryService>();
