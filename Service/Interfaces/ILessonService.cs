@@ -13,7 +13,7 @@ namespace Service.Interfaces
         Task<LessonResponse?> GetLessonByIdAsync(int id);
         Task<List<LessonResponse>> GetLessonsByChapterAsync(int chapterId);
         Task<LessonResponse> CreateLessonAsync(CreateLessonRequest request);
-        Task<LessonResponse> UpdateLessonAsync(UpdateLessonRequest request);
+        Task<LessonResponse> UpdateLessonAsync(int id, UpdateLessonRequest request);
         Task<bool> DeleteLessonAsync(int id);
     }
 }
