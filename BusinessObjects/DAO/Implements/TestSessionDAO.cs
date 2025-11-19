@@ -150,5 +150,22 @@ namespace BusinessObjects.DAO.Implements
                 throw;
             }
         }
+
+        public async Task<StudentTestSession?> GetStudentAnswersFromSessionIdAsync(int sessionId)
+        {
+            try
+            {
+                return await _context.StudentTestSessions
+                    .AsNoTracking()
+                    .Include(s => s.StudentAnswers)
+                    .FirstOrDefaultAsync(s => s.Id == sessionId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving student answers from session ID: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                throw;
+            }
+        }
     }
 }

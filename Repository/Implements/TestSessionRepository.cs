@@ -1,4 +1,5 @@
 ﻿using BusinessObjects.DAO.Interfaces;
+using BusinessObjects.DTO.TestSession;
 using BusinessObjects.Entities;
 using Repository.Interfaces;
 using System;
@@ -45,6 +46,11 @@ namespace Repository.Implements
         public async Task<bool> UpdateTestSessionAsync(StudentTestSession session)
         {
             return await _sessionDao.UpdateTestSessionAsync(session);
+        }
+
+        public async Task<StudentTestSession?> GetStudentAnswersFromSessionIdAsync(int sessionId)
+        {
+            return await _sessionDao.GetStudentAnswersFromSessionIdAsync(sessionId);
         }
     }
 }
