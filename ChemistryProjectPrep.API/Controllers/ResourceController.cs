@@ -210,8 +210,8 @@ namespace ChemistryProjectPrep.API.Controllers
             }
         }
 
-        [HttpPut("/mark/{id}")]
-        [Authorize(Roles = "Staff,Admin")]
+        [HttpPut("mark/{id}")]
+        [Authorize(Roles = "Staff,Admin,Student")]
         public async Task<ActionResult<ApiResponse<bool>>> MarkCompletedResource(int id)
         {
             try
