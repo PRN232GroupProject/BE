@@ -21,13 +21,14 @@ namespace BusinessObjects.DAO.Implements
         {
             return await _context.StudentTestSessions
                 .Include(s => s.StudentAnswers)
-                    .ThenInclude(sa => sa.Question)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(s => s.Id == sessionId);
         }
 
         public async Task<List<StudentTestSession>> GetSessionsByUserAndTestAsync(int userId, int testId)
         {
             return await _context.StudentTestSessions
+                .AsNoTracking()
                 .Where(s => s.UserId == userId && s.TestId == testId)
                 .OrderByDescending(s => s.StartTime)
                 .ToListAsync();

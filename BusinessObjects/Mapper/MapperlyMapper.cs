@@ -179,6 +179,7 @@ namespace BusinessObjects.Mapper
         [MapProperty(nameof(StudentAnswer.SessionId), nameof(AnswerResponse.SessionId))]
         [MapProperty(nameof(StudentAnswer.QuestionId), nameof(AnswerResponse.QuestionId))]
         [MapProperty(nameof(StudentAnswer.SelectedAnswer), nameof(AnswerResponse.SelectedAnswer))]
+        [MapProperty(nameof(StudentAnswer.IsCorrect), nameof(AnswerResponse.IsCorrect))]
         public partial AnswerResponse AnswerToAnswerResponse(StudentAnswer answer);
         public partial List<AnswerResponse> AnswersToAnswerResponses(List<StudentAnswer> answers);
 

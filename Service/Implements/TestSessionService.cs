@@ -13,10 +13,11 @@ namespace Service.Implements
         private readonly IStudentTestSessionRepository _sessionRepo;
         private readonly IMapperlyMapper _mapper;
 
-        public TestSessionService(ITestSessionRepository sessionRepository, IMapperlyMapper mapper)
+        public TestSessionService(ITestSessionRepository sessionRepository,IStudentTestSessionRepository sessionRepo, IMapperlyMapper mapper)
         {
             _sessionRepository = sessionRepository;
             _mapper = mapper;
+            _sessionRepo = sessionRepo;
         }
 
         public async Task<TestSessionResponse> CreateTestSessionAsync(CreateTestSessionRequest request)
