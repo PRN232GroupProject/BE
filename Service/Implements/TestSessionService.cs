@@ -128,6 +128,7 @@ namespace Service.Implements
                 existingSession.StartTime = request.StartTime;
                 existingSession.EndTime = request.EndTime;
                 existingSession.Status = request.Status;
+                existingSession.Score = request.Score;
 
                 Console.WriteLine($"Updated properties - Test ID: {request.TestId}, Start Time: {request.StartTime}, End Time: {request.EndTime}, Status: {request.Status} ");
 
