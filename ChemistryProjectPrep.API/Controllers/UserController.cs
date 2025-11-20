@@ -110,11 +110,11 @@ namespace ChemistryProjectPrep.API.Controllers
 
         [HttpPut(ApiEndpointConstants.User.UpdateUserEndpoint)]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateUser([FromRoute] int userId, [FromBody] UserRequestDTO userRequest)
+        public async Task<IActionResult> UpdateUser([FromRoute] int id, [FromBody] UserRequestDTO userRequest)
         {
             try
             {
-                var result = await _userService.UpdateUser(userId, userRequest);
+                var result = await _userService.UpdateUser(id, userRequest);
                 var response = ApiResponseBuilder.BuildResponse(
                     statusCode: 200,
                     message: "User updated successfully",
@@ -130,11 +130,11 @@ namespace ChemistryProjectPrep.API.Controllers
 
         [HttpDelete(ApiEndpointConstants.User.DeleteUserEndpoint)]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteUser([FromRoute] int userId)
+        public async Task<IActionResult> DeleteUser([FromRoute] int id)
         {
             try
             {
-                var result = await _userService.DeleteUser(userId);
+                var result = await _userService.DeleteUser(id);
                 var response = ApiResponseBuilder.BuildResponse(
                     statusCode: 200,
                     message: "User deleted successfully",

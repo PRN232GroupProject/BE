@@ -26,8 +26,8 @@
             public const string GetCurrentUserEndpoint = UserEndpoint + "/current";
             public const string GetUsersByRoleEndpoint = GetAllUsersEndpoint + "/{role}";
             public const string CreateUserEndpoint = UserEndpoint;
-            public const string UpdateUserEndpoint = UserEndpoint;
-            public const string DeleteUserEndpoint = UserEndpoint;
+            public const string UpdateUserEndpoint = UserEndpoint + "/{id}";
+            public const string DeleteUserEndpoint = UserEndpoint + "/{id}";
             public const string UpdateProfileEndpoint = UserEndpoint + "/profile";
             public const string UpdatePasswordEndpoint = UserEndpoint + "/change-password";
         }
