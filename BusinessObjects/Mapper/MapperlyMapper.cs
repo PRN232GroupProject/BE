@@ -36,8 +36,12 @@ namespace BusinessObjects.Mapper
         public partial User RegisterRequestToUser(RegisterRequest request);
 
         [MapProperty(nameof(UserRequestDTO.Role), nameof(User.RoleId))]
+        [MapperIgnoreTarget(nameof(User.Role))]  // Add this line
+        [MapperIgnoreTarget(nameof(User.CreatedQuestions))]
+        [MapperIgnoreTarget(nameof(User.CreatedTests))]
+        [MapperIgnoreTarget(nameof(User.StudentTestSessions))]
         public partial User RequestDTOToUser(UserRequestDTO request);
-     
+
         public partial User UpdateProfileToUser(UpdateProfileRequest request);
 
 
