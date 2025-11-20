@@ -47,12 +47,9 @@ namespace Service.Implements
             return _mapper.LessonToLessonResponse(lesson);
         }
 
-        public async Task<LessonResponse> UpdateLessonAsync(UpdateLessonRequest request)
+        public async Task<LessonResponse> UpdateLessonAsync(int id, UpdateLessonRequest request)
         {
-            var existing = await _lessonRepo.GetLessonByIdAsync(request.Id);
-            if (existing == null)
-                throw new KeyNotFoundException("Lesson not found");
-
+            var existing = await _lessonRepo.GetLessonByIdAsync(id);
             _mapper.UpdateLessonFromRequest(request, existing);
 
             await _lessonRepo.UpdateLessonAsync(existing);

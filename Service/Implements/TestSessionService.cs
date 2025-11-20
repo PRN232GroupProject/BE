@@ -162,7 +162,7 @@ namespace Service.Implements
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error in UpdateTestSessionAsync: {ex.Message}");
+                Console.WriteLine($"Error in GetSessionsByUserAsync: {ex.Message}");
                 Console.WriteLine($"Stack Trace: {ex.StackTrace}");
                 throw;
             }

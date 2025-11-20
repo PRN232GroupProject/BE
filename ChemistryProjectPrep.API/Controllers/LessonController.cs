@@ -56,11 +56,11 @@ namespace ChemistryProjectPrep.API.Controllers
             return Ok(ApiResponseBuilder.BuildResponse(200, "Lesson created successfully", response));
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [Authorize(Roles = "Admin,Staff")]
-        public async Task<IActionResult> Update(UpdateLessonRequest request)
+        public async Task<IActionResult> Update([FromRoute] int id, UpdateLessonRequest request)
         {
-            var response = await _lessonService.UpdateLessonAsync(request);
+            var response = await _lessonService.UpdateLessonAsync(id ,request);
             return Ok(ApiResponseBuilder.BuildResponse(200, "Lesson updated", response));
         }
 
