@@ -41,6 +41,7 @@ namespace ChemistryProjectPrep.API.Configurations
             services.AddScoped<IResourceRepository, ResourceRepository>();
             services.AddScoped<IQuestionRepository, QuestionRepository>();
             services.AddScoped<ITestRepository, TestRepository>();
+            services.AddScoped<IAnswerRepository, AnswerRepository>();
             services.AddScoped<IStudentTestSessionRepository, StudentTestSessionRepository>();
             services.AddScoped<ITestSessionRepository, TestSessionRepository>();
             services.AddScoped<ITestQuestionRepository, TestQuestionRepository>();
@@ -54,6 +55,7 @@ namespace ChemistryProjectPrep.API.Configurations
             services.AddScoped<IResourceService, ResourceService>();
             services.AddScoped<IQuestionService, QuestionService>();    
             services.AddScoped<ITestService, TestService>();
+            services.AddScoped<IAnswerService, AnswerService>();
             services.AddScoped<ITestQuestionService, TestQuestionService>();
             services.AddScoped<ITestSessionService, TestSessionService>();
 
