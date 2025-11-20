@@ -44,6 +44,7 @@ namespace Service.Implements
                 var user = _mapper.RequestDTOToUser(userRequest);
                 user.CreatedAt = DateTime.UtcNow;
                 user.PasswordHash = _authService.HashPassword(userRequest.Password);
+                user.IsActive = true;
                 return await _userRepository.CreateUserAsync(user);
             }
             catch (Exception ex)
