@@ -48,13 +48,7 @@ namespace Repository.Implements
 
         public async Task<bool> DeleteUserAsync(int userId)
         {
-            var user = await _userDao.GetUserByIdAsync(userId);
-            if (user == null)
-            {
-                return false;
-            }
-            await _userDao.DeleteUserAsync(userId);
-            return true;
+            return await _userDao.DeleteUserAsync(userId); 
         }
 
         public Task<IEnumerable<User>> GetAllUsersAsync()
