@@ -163,9 +163,9 @@ namespace Service.Implements
                     throw new Exception("User does not exist.");
                 }
 
-                var user = _mapper.UpdateProfileToUser(request);
+                existingUser.FullName = request.FullName;
 
-                return await _userRepository.UpdateUserAsync(user);
+                return await _userRepository.UpdateUserAsync(existingUser);
             }
             catch (Exception ex)
             {
@@ -205,3 +205,4 @@ namespace Service.Implements
         }
     }
 }
+    
